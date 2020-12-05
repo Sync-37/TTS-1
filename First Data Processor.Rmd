@@ -1,0 +1,40 @@
+---
+title: "TestsByHealthBoard"
+author: "Michael Kent"
+date: "05/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+here()
+```
+
+# Reading in the data
+```{r datainput}
+# Reading data in
+#ca_np <- read_csv(here("data", "ca_np.csv"))
+cv_d_hb <- read_excel(here("data","tests_by_hb.xlsx"))
+j_cv_d_hb = janitor::clean_names(cv_d_hb)
+names(j_cv_d_hb)
+#cv_d_hb
+
+```
+# Extract Data
+```{r data_extract}
+df <- data.frame(j_cv_d_hb) %>%
+  select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
+  gather(key = "variable", value = "value",-date_notified)
+head(df)
+#df
+```
+```{r drawcharts}
+ggplot(df, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable)) + theme_light() # +facet_wrap(~ variable)
+#  scale_color_manual(values = c("darkred", "steelblue"))
+ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 20, height = 20)
+```
