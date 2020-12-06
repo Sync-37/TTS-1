@@ -20,6 +20,7 @@ here()
 # Reading data in  R-Table5-Testing.xlsx
 sc_t5_testing <- read_excel(here("data","R-Table5-Testing.xlsx"))
 j_sc_t5_testing = janitor::clean_names(sc_t5_testing)
+j_sc_t5_testing <- j_sc_t5_testing[-c(1:152), ]
 names(j_sc_t5_testing)
 #cv_d_hb
 
@@ -35,45 +36,48 @@ head(df_sc_uk_test)
 
 # Second compares testing and case numbers.
 df_sc_t5 <- data.frame(j_sc_t5_testing) %>%
-  select(date_notified, daily_new_cases, daily_tests_7_day_ma) %>%
+  select(date_notified, daily_new_cases_scaled, daily_tests_7_day_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
 head(df_sc_t5)
 
 ```
 ```{r drawcharts}
+v_title="Testing rates for Scotland and all UK"
+v_caption = "Source: UK and Scottish gov statistics as published 5th December 2020"
+v_xlabel = "Date"
+v_ylabel = "yl"
+
 # First, draw the Sco/UK testing
 ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=1 ) + theme_light() + 
-  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3")  )+  
-      labs(x = "Date", 
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  
+      labs(x = v_xlabel, 
       y = "Tests per 100,000 population", 
-      title = "               Testing rates for Scotland and whole UK ",
-      title = "Testing rates for Scotland and whole UK ",
-      caption = "Source: UK and Scottish gov statistics as published 5th December 2020",
+      title = v_title,
+      caption = v_caption,
        color = "") 
 # NOTE:- Now published on the site
 ggsave(here("figures", "df_sc_uk_test.jpg"), dpi = 180, width = 8, height = 6)
 # NOTE:- Now published on the site
 
+
 # Then the Sco testing and case numbers
 ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable)) + theme_light() # +facet_wrap(~ variable)
+  geom_line(aes(color = variable)) + theme_light() +
+# scale_y_continuous(sec.axis = sec_axis(~.*0.1, name = "Daily Cases"))
+  facet_wrap(~ variable)
 #  scale_color_manual(values = c("darkred", "steelblue"))
-ggsave(here("figures", "np_graph.jpg"), dpi = 360, width = 20, height = 20)
-
-
-
-
+ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 8, height = 6)
 ```
 
 
 
-```{r drawlines}
-sc_test_daycase <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y = daily_new_cases))
-sc_test_per_ma <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y =  daily_tests_per_100_000_ma ))
-sc_test_daycase + geom_line()
-sc_test_per_ma + geom_line()
-```  
+<!-- ```{r drawlines} -->
+<!-- sc_test_daycase <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y = daily_new_cases)) -->
+<!-- sc_test_per_ma <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y =  daily_tests_per_100_000_ma )) -->
+<!-- sc_test_daycase + geom_line() -->
+<!-- sc_test_per_ma + geom_line() -->
+<!-- ```   -->
   
   
   
