@@ -28,7 +28,7 @@ names(j_sc_t5_testing)
 This extracts the data as a data frame.  Below we extract a line at a time.
 ```{r data_extract}
 df_sc_t5 <- data.frame(j_sc_t5_testing) %>%
-  select(date_notified, daily_new_cases, daily_tests_per_100_00_ma) %>%
+  select(date_notified, daily_new_cases, daily_tests_7_day_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
 head(df_sc_t5)
 #df
@@ -39,3 +39,12 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
 #  scale_color_manual(values = c("darkred", "steelblue"))
 ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 20, height = 20)
 ```
+```{r drawlines}
+sc_test_daycase <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y = daily_new_cases))
+sc_test_per_ma <- ggplot(data = j_sc_t5_testing, aes(x = date_notified, y =  daily_tests_per_100_000_ma ))
+sc_test_daycase + geom_line()
+sc_test_per_ma + geom_line()
+```  
+  
+  
+  
