@@ -43,11 +43,12 @@ head(df_sc_t5)
 ```{r drawcharts}
 # First, draw the Sco/UK testing
 ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable)) + theme_light() + scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3")  )+  
+  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3")  )+  
       labs(x = "Date", 
-      y = "Tests", 
-      title = "Average number of Covid tests per 100,000 population",
-      caption = "Source: UK and Scottish gov statistics.",
+      y = "Tests per 100,000 population", 
+      title = "Testing rates for Scotland and whole UK ",
+      caption = "Source: UK and Scottish gov statistics as published 5th December 2020",
        color = "") 
 
 
