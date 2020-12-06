@@ -1,0 +1,41 @@
+---
+title: "Daily Trends Scotland"
+author: "Michael Kent"
+date: "06/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+here()
+```
+
+# Reading in the data
+
+```{r datainput}
+# Reading data in  R-Table5-Testing.xlsx
+sc_t5_testing <- read_excel(here("data","R-Table5-Testing.xlsx"))
+j_sc_t5_testing = janitor::clean_names(sc_t5_testing)
+names(j_sc_t5_testing)
+#cv_d_hb
+
+```
+# Extract Data
+This extracts the data as a data frame.  Below we extract a line at a time.
+```{r data_extract}
+df_sc_t5 <- data.frame(j_sc_t5_testing) %>%
+  select(date_notified, daily_new_cases, daily_tests_per_100_00_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+head(df_sc_t5)
+#df
+```
+```{r drawcharts}
+ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable)) + theme_light() # +facet_wrap(~ variable)
+#  scale_color_manual(values = c("darkred", "steelblue"))
+ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 20, height = 20)
+```

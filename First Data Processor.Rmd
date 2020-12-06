@@ -1,5 +1,5 @@
 ---
-title: "TestsByHealthBoard"
+title: "Cases by Health Board"
 author: "Michael Kent"
 date: "05/12/2020"
 output: html_document
@@ -15,6 +15,20 @@ here()
 ```
 
 # Reading in the data
+This section is set up to read the processed numbers and display them as graphs.  
+
+* Initial setup reads the cases by health board data from an Excel spreadsheet.
+* Extracts the data into a data frame
+* Draws the graph.
+
+## Next section will
+* Read all testing data and put each 'set' into a variabe which will allow 'mix and match.
+* Produce the various 'slices' of the data that I want.
+* Export the graphs for the TTS website.
+
+## Data Processing
+Will learn and implement methods of processing rawer data so I do less with Excel.
+
 ```{r datainput}
 # Reading data in
 #ca_np <- read_csv(here("data", "ca_np.csv"))
