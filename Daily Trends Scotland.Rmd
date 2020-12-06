@@ -47,11 +47,8 @@ ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) +
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3")  )+  
       labs(x = "Date", 
       y = "Tests per 100,000 population", 
-<<<<<<< HEAD
       title = "               Testing rates for Scotland and whole UK ",
-=======
       title = "Testing rates for Scotland and whole UK ",
->>>>>>> db7af5a1ec3e8a90ad747dbba8ac567abe74c962
       caption = "Source: UK and Scottish gov statistics as published 5th December 2020",
        color = "") 
 # NOTE:- Now published on the site
