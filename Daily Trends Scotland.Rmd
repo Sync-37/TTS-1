@@ -4,6 +4,30 @@ author: "Michael Kent"
 date: "06/12/2020"
 output: html_document
 ---
+# To Do List
+
+## List here all the charts to be drawn
+
+* 4 nations daily 28 days since deaths / 10^5
+* 4 nations weekly 28 days since  deaths / 10^5
+* 4 nations daily certificate deaths / 10^5
+* 4 nations weekly certificate deaths / 10^5
+  * check MK PHS-ONS deaths data
+* 4 nations positivity rates
+* __4 nations testing rates__
+* __Scotland deaths v NRO deaths__
+* ___Scotland testing with event labels___
+* Scotland 7 day cases by HB
+* Scotland 7 day positive rates by HB
+* Scotland 7 day cases positive rates by HB
+
+## Other actions
+
+- Check what other data is available on ONS/PHS and gov.scot sites.
+- Create text for each chart/set of charts.
+  - Do main picture and text with 'read more' sections.
+  - Do an index page.
+  - Transfer the code here to a script page with comments (lots!) 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -34,6 +58,7 @@ df_sc_uk_test <- data.frame(j_sc_t5_testing) %>%
   select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
 head(df_sc_uk_test)
+
 # Same data but from 1st August
 df_sc_uk_test_zoom <- data.frame(j_sc_t5_testing_zoom) %>%
   select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
