@@ -65,6 +65,13 @@ df_sc_uk_test_zoom <- data.frame(j_sc_t5_testing_zoom) %>%
   gather(key = "variable", value = "value",-date_notified)
 head(df_sc_uk_test_zoom)
 
+# Daily positives from 1st August
+df_sc_positive_zoom <- data.frame(j_sc_t5_testing_zoom) %>%
+  select(date_notified, percent_daily_positive_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+head(df_sc_positive_zoom)
+
+
 # Second compares testing and case numbers.
 df_sc_t5 <- data.frame(j_sc_t5_testing) %>%
   select(date_notified, daily_new_cases_scaled, daily_tests_7_day_ma) %>%
@@ -101,6 +108,18 @@ v_image_file_name = "2020_12_06 UK SC test compare zoom.jpg"
 ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=1 ) + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  
+      labs(x = v_xlabel, 
+          y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "") 
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Change image file name
+v_image_file_name = "2020_12_06 percent daily positive MA.jpg"
+ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+ # scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  
       labs(x = v_xlabel, 
           y = v_ylabel, 
           title = v_title,
