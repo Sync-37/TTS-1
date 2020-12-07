@@ -16,6 +16,7 @@ here()
 ```
 
 # Reading in the data
+This is rough and ready.  It needs much data manipulation of the spreadsheet then the data for the last few weeks is always poor.
 
 ```{r datainput}
 # Standardised input - one dataset per spreadsheet/CSV
@@ -23,21 +24,22 @@ here()
 # New with new names
 uk_d_28_day_testing <- read_excel(here("data","deaths_within_28_days_reported.xlsx"))
 j_uk_d_28_day_testing = janitor::clean_names(uk_d_28_day_testing)
-j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
+j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:275), ]
+#j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
 names(j_uk_d_28_day_testing)
-ggplot(data = j_uk_d_28_day_testing, aes(x = reported_date, y = deaths_per_100000_ma, group = area_name)) +
-    geom_line(aes(color = area_name),size=1 ) + theme_light() 
-```
+#data_wide <- spread(j_uk_d_28_day_testing, area_name, new_deaths28days_by_publish_date)
+#names(data_wide)
+#data_wide
+#ggplot(data = j_uk_d_28_day_testing, aes(x = reported_date, y = deaths_per_100000_ma, group = area_name)) +
+#    geom_line(aes(color = area_name),size=1 ) + theme_light() 
 
-```{r parttwo}
+
 # First data frame is for Sco/UK testing comparison.
-df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
-  select(reported_date, area_name, new_deaths28days_by_publish_date) %>%
+df_uk_d_28_day_testing <- data.frame(j_uk_d_28_day_testing_zoom) %>%
+  select(reported_date, england_7_day_ma_per_100_000, northern_ireland_7_day_ma_per_100_000, scotland_7_day_ma_per_100_000,wales_7_day_ma_per_100_000 ) %>%
   gather(key = "variable", value = "value",-reported_date)
-head(df_sc_uk_test)
-```
+#head(df_uk_d_28_day_testing)
 
-```{r partthree}
 
 # First, draw the Sco/UK testing
 # Main
@@ -45,16 +47,16 @@ v_title="Testing rates for Scotland and all UK"
 v_caption = "Source: UK and Scottish gov statistics as published 5th December 2020"
 v_xlabel = "Date"
 v_ylabel = "Tests per 100,000 population"
-v_image_file_name = "2020_12_06 UK SC test compare.jpg"
+v_image_file_name = "2020_12_06 UK deaths per 100000.jpg"
 
-ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
+ggplot(df_uk_d_28_day_testing, aes(x = reported_date, y = value)) + 
   geom_line(aes(color = variable),size=1 ) + theme_light() + 
-  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  
+  scale_color_manual(labels = c("England", "Northern Ireland", "Scotland", " Wales"), values = c("purple3", "steelblue3", "lightblue", "black") ) +  
       labs(x = v_xlabel, 
           y = v_ylabel, 
           title = v_title,
           caption = v_caption,
           color = "") 
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
 
 ```
