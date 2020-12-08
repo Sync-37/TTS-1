@@ -1,0 +1,63 @@
+---
+title: "Cases by Health Board."
+author: "Michael Kent"
+date: "07/12/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+here()
+```
+Data from COVID-19+daily+data+-+by+NHS+Board+
+Input table cases_by_hb
+# Reading in the data
+This is rough and ready.  It needs much data manipulation of the spreadsheet then the data for the last few weeks is always poor.
+
+```{r datainput}
+# Standardised input - one dataset per spreadsheet/CSV
+
+# New with new names
+sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
+# j_sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
+j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
+j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
+#j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
+names(j_sc_d_cases_by_hb)
+```
+
+```{r two}
+# First data frame is for Sco/UK testing comparison.
+df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb_zoom) %>%
+  select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_uk_d_28_day_testing)
+
+
+# First, draw the Sco/UK testing
+# Main
+v_title="New Covid 19 cases by Health Board"
+v_caption = "Source: Scottish gov statistics. Graph C TheTrue.Scot"
+v_xlabel = "Date"
+v_ylabel = "New Cases per 100,000 population"
+v_image_file_name = "2020_12_07 Average new cases by HB.jpg"
+v_image_file_name2 = "2020_12_07 Average new cases by HB set.jpg"
+# Set up the default plot configuration.
+p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
+      labs(x = v_xlabel,
+           y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "")
+p  # Plot group chart
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
+p +  facet_wrap(~ variable, ncol=4,  scales = "free_y", as.table = TRUE) # plot matrix of individual charts.
+ggsave(here("figures", paste("ab-", v_image_file_name2, sep = "", collapse=NULL)  ), dpi = 360, width = 12, height = 6)
+
+```
