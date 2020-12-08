@@ -24,10 +24,13 @@ This is rough and ready.  It needs much data manipulation of the spreadsheet the
 
 # New with new names
 sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
+sc_d_cases_by_hb_labels <- sc_d_cases_by_hb[1,] 
+
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
 #j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
-names(j_sc_d_cases_by_hb)
+# names(j_sc_d_cases_by_hb)
+sc_d_cases_by_hb_labels
 ```
 
 ```{r two}
@@ -41,22 +44,22 @@ df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb_zoom) %>%
 # First, draw the Sco/UK testing
 # Main
 v_title="New Covid 19 cases by Health Board"
-v_caption = "Source: Scottish gov statistics C TheTrue.Scot"
+v_caption = "Source: Scottish gov statistics. Graph C TheTrue.Scot"
 v_xlabel = "Date"
 v_ylabel = "New Cases per 100,000 population"
 v_image_file_name = "2020_12_07 Average new cases by HB.jpg"
 v_image_file_name2 = "2020_12_07 Average new cases by HB set.jpg"
-
+# Set up the default plot configuration.
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+  geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
       labs(x = v_xlabel,
            y = v_ylabel, 
           title = v_title,
           caption = v_caption,
           color = "")
-p
+p  # Plot group chart
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
-p +  facet_wrap(~ variable, ncol=4,  scales = "free_y")
-ggsave(here("figures", v_image_file_name2), dpi = 360, width = 12, height = 6)
+p +  facet_wrap(~ variable, ncol=4,  scales = "free_y", as.table = TRUE) # plot matrix of individual charts.
+ggsave(here("figures", paste("ab-", v_image_file_name2, sep = "", collapse=NULL)  ), dpi = 360, width = 12, height = 6)
 
 ```
