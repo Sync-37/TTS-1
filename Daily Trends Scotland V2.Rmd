@@ -47,21 +47,25 @@ v_caption = paste( "Source: UK and Scottish gov statistics as published ", pubda
 # Reading in the data
 
 ```{r datainput}
+############ UPDATED ###############
 # Standardised input - one dataset per spreadsheet/CSV
-
-# New with new names
-uk_d_28_day_testing <- read_excel(here("data","deaths_within_28_days_reported.xlsx"))
-j_uk_d_28_day_testing = janitor::clean_names(uk_d_28_day_testing)
-j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
-#names(j_uk_d_28_day_testing)
-
-# Reading data in  R-Table5-Testing.xlsx
-sco_uk_testing <- read_excel(here("data","SCO-UK-Testing-data.xlsx"))
-
+# Reading data for Scotland/UK testing
+sco_uk_testing <- read_excel(here("data","d_SCO_UK_Testing.xlsx"))
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
 j_sco_uk_testing_zoom <- j_sco_uk_testing[-c(1:152), ]
-names(j_sco_uk_testing)
+#names(j_sco_uk_testing)
 #cv_d_hb
+
+
+
+
+
+# New with new names
+uk_d_28_day_testing <- read_excel(here("data","deaths_within_28_days_reported_v2.xlsx"))
+j_uk_d_28_day_testing = janitor::clean_names(uk_d_28_day_testing)
+j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:211), ]  #   Data from 1st Agust
+names(j_uk_d_28_day_testing)
+
 
 
 # LABELS
@@ -75,7 +79,7 @@ This extracts the data as a data frame.  Below we extract a line at a time.
 df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
   select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
-head(df_sc_uk_test)
+#head(df_sc_uk_test)
 
 # Sco/UK testing comparison from 1st August
 df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
@@ -107,6 +111,18 @@ df_sc_t5_pos_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
   select(date_notified, daily_new_cases_ma, daily_tests_7_day_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
 #head(df_sc_t5_pos_zoom)
+
+# Now deaths within 28 days of a positive test
+df_uk_d28_pos <- data.frame(j_uk_d_28_day_testing) %>%
+  select(date_notified, england_7_day_ma_per_100_000:wales_7_day_ma_per_100_000) %>%
+  gather(key = "variable", value = "value",-date_notified)
+# head(df_uk_d28_pos)
+
+# Same data but from 1st August
+df_uk_d28_pos_zoom <- data.frame(j_uk_d_28_day_testing_zoom) %>%
+  select(date_notified, england_7_day_ma_per_100_000:wales_7_day_ma_per_100_000) %>%
+  gather(key = "variable", value = "value",-date_notified)
+head(df_uk_d28_pos_zoom)
 
 ```
 ```{r drawcharts}
@@ -148,6 +164,30 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 # Change image file name
 v_image_file_name = paste(today, "Percent daily positive MA.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+      labs(x = v_xlabel, 
+          y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "") 
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#------------------------------------------------------------------------------------
+v_title="Deaths within 28 days of positive death"
+v_ylabel = "Weekly deaths per 100,000 population"
+# Change image file name
+v_image_file_name = paste(today, "Deaths within 28 days.jpg", sep = "", collapse=NULL)
+ggplot(df_uk_d28_pos, aes(x = date_notified, y = value)) + 
+  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+      labs(x = v_xlabel, 
+          y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "") 
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#------------------------------------------------------------------------------------
+# Change image file name
+v_image_file_name = paste(today, "Deaths within 28 days zoom.jpg", sep = "", collapse=NULL)
+ggplot(df_uk_d28_pos_zoom, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=1 ) + theme_light() + 
       labs(x = v_xlabel, 
           y = v_ylabel, 

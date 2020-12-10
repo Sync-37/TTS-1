@@ -64,8 +64,8 @@ v_title="New Covid 19 cases by Health Board"
 v_caption = "Source: Scottish gov statistics. Graph C TheTrue.Scot"
 v_xlabel = "Date"
 v_ylabel = "New Cases per 100,000 population"
-v_image_file_name = "2020_12_07 Average new cases by HB.jpg"
-v_image_file_name2 = "2020_12_07 Average new cases by HB set.jpg"
+v_image_file_name = "2020_12_09 Average new cases by HB.jpg"
+v_image_file_name2 = "2020_12_09 Average new cases by HB set.jpg"
 # Set up the default plot configuration.
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) 
 pset1 <-  geom_line(aes(color = variable),size=0.75 ,labeller = labels_HB_Data)
@@ -86,7 +86,8 @@ p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) +
           title = v_title,
           caption = v_caption,
           color = "")
-p  # Plot group chart
+p 
+                   # Plot group chart
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
 #----------------
 p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_HB_Data, scales = "free_y", as.table = TRUE)  
