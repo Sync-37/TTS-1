@@ -141,7 +141,7 @@ v_caption = paste( "Source: UK and Scottish gov statistics as published ", pubda
 # LABELS
 labels_SCO_UK_Test <- as_labeller(c(`daily_new_cases_ma` = "Daily new cases (7 day MA)", `daily_tests_7_day_ma` = "Daily tests (7 day MA)"))
 
-p_geom <-geom_line(aes(color = variable),size=1 ) 
+p_geom <-geom_line(aes(color = variable),size=0.75 ) 
 
 # First, draw the Sco/UK testing
 v_title="Testing rates for Scotland and all UK"
@@ -159,7 +159,7 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 # Change image file name
 v_image_file_name = paste(today, "UK SC test compare zoom.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable),size=1 ) + theme_light() + 
+  p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
@@ -167,8 +167,8 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 # Change image file name
 v_image_file_name = paste(today, "Percent daily positive MA.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable),size=1 ) + theme_light() + 
-      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  p_geom  + theme_light() + 
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 #------------------------------------------------------------------------------------
 v_title="Deaths within 28 days of positive death"
@@ -176,15 +176,15 @@ v_ylabel = "Weekly deaths per 100,000 population"
 # Change image file name
 v_image_file_name = paste(today, "Deaths within 28 days.jpg", sep = "", collapse=NULL)
 ggplot(df_uk_d28_pos, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable),size=1 ) + theme_light() + 
-      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  p_geom  + theme_light() + 
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 #------------------------------------------------------------------------------------
 # Change image file name
 v_image_file_name = paste(today, "Deaths within 28 days zoom.jpg", sep = "", collapse=NULL)
 ggplot(df_uk_d28_pos_zoom, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable),size=1 ) + theme_light() + 
-      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  p_geom  + theme_light() + 
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 #------------------------------------------------------------------------------------
 ##########################################################################
@@ -197,8 +197,8 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 # Change image file name
 v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable)) + theme_light() +
-  facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
+  p_geom + theme_light() +theme(legend.position = "none")+ 
+    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Then the Sco testing and case numbers
@@ -209,7 +209,7 @@ v_ylabel = "Count"
 
 v_image_file_name = paste(today, "Testing v Case Numbers zoom.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable)) + theme_light() +theme(legend.position = "none")+
+    p_geom + theme_light() +theme(legend.position = "none")+
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_28_day_deaths , ncol=1, scales = "free_y")
 
@@ -217,7 +217,7 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
-  geom_line(aes(color = variable)) + theme_light() +theme(legend.position = "none")+
+    p_geom + theme_light() +theme(legend.position = "none")+
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_28_day_deaths, ncol=1, scales = "free_y")
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
