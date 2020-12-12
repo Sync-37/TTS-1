@@ -111,7 +111,9 @@ labels_SCO_UK_Test <- as_labeller(c(
         `sco_daily_tests_per_100_000`  = "Sco daily tests per 100,000",
         `sco_daily_tests_per_100_000_ma`  = "Sco Daily Tests per 100,000 MA",
         `percent_daily_positive_ma`  = "Percent Daily Positive MA",
-        `new_cases_last_14_days`  = "New Cases last 14 days"))
+        `new_cases_last_14_days`  = "New Cases last 14 days",
+        `people_newly_tested` = "People Newly Tested",
+        `people_newly_tested_ma` = "People Newly Tested MA"  ))
 
 labels_28_day_deaths <- as_labeller(c(
         `daily_new_cases_ma` = "Daily New Cases (7 day MA)",
@@ -140,7 +142,7 @@ p_geom <-geom_line(aes(color = variable),size=0.75 )
 
 
 ```
-# Extract Data
+# Extract Data and Plot
 This extracts the data as a data frame.  Below we extract a line at a time.
 ```{r SCO_UK_Testing}
 ###############################################################
@@ -303,6 +305,44 @@ p_geom  + theme_light() +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 ```
+```{r SCO_Active_Cases_14_days}
+##---------Number of people newly tested ------------------------------
+# Newly Tested MA
+df_sc_new_tests <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, people_newly_tested_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_new_cases)
+
+# Newly Tested MA
+df_sc_new_tests_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, people_newly_tested_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_new_cases_zoom)
+
+#------------------------------------------------------------------------------------
+# Newly Tested MA
+v_title="People Newly Tested"
+v_xlabel = "Date"
+v_ylabel = "Number of cases"
+v_image_file_name = paste(today, "People Newly Tested.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_new_tests, aes(x = date_notified, y = value)) + 
+p_geom  + theme_light() + 
+  #  geom_line(aes(color = variable),size=1 ) 
+  scale_color_manual(labels = c("Active Cases"),values = c("purple3") ) +  
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#------------------------------------------------------------------------------------
+# Change image file name
+v_image_file_name = paste(today, "People Newly Tested zoom.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_new_tests_zoom, aes(x = date_notified, y = value)) + 
+p_geom  + theme_light() + 
+  #  geom_line(aes(color = variable),size=1 ) 
+  scale_color_manual(labels = c("Active Cases"),values = c("purple3") ) +  
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+```
+
 ```{r UK_Deaths_28_Days}
 
 #------- Deaths within 28 days of positive test (UK)----------------------------
