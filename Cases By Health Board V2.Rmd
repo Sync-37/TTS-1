@@ -48,6 +48,7 @@ labels_HB_Data <- as_labeller(c(
                   `nhs_western_isles`="NHS Western Isles",
                   `scotland`="Scotland"
                   ))
+today <- format(Sys.Date(), format="%Y-%m-%d ") 
 ```
 
 ```{r two}
@@ -64,8 +65,8 @@ v_title="New Covid 19 cases by Health Board"
 v_caption = "Source: Scottish gov statistics. Graph C TheTrue.Scot"
 v_xlabel = "Date"
 v_ylabel = "New Cases per 100,000 population"
-v_image_file_name = "2020_12_09 Average new cases by HB.jpg"
-v_image_file_name2 = "2020_12_09 Average new cases by HB set.jpg"
+v_image_file_name = paste(today, "Average new cases by HB set.jpg", sep = "", collapse=NULL)
+v_image_file_name2 = paste(today, "Average new cases by HB set.jpg", sep = "", collapse=NULL)
 # Set up the default plot configuration.
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) 
 pset1 <-  geom_line(aes(color = variable),size=0.75 ,labeller = labels_HB_Data)
@@ -94,6 +95,6 @@ p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_HB_Data, scales = "f
 p +  p_facet + theme(legend.position = "none")
 
 # plot matrix of individual charts.
-ggsave(here("figures", paste("ab-", v_image_file_name2, sep = "", collapse=NULL)  ), dpi = 360, width = 12, height = 6)
+ggsave(here("figures", v_image_file_name2 ), dpi = 360, width = 12, height = 6)
 
 ```

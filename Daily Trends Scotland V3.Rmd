@@ -239,11 +239,11 @@ df_sc_t5_pos_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
 #head(df_sc_t5_pos_zoom)
 # Then the Sco testing and case numbers
 # Change image file name
-v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
-ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
-  p_geom + theme_light() +theme(legend.position = "none")+ 
-    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+##v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
+##ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+##  p_geom + theme_light() +theme(legend.position = "none")+ 
+##    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
+#ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Then the Sco testing and case numbers
 # Change image file name
@@ -393,7 +393,7 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_28_day_deaths , ncol=1, scales = "free_y")
 
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 #v_image_file_name = paste(today, "Testing v New Cases zooms.jpg", sep = "", collapse=NULL)
 #ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
