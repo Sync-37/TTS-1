@@ -113,7 +113,8 @@ labels_SCO_UK_Test <- as_labeller(c(
         `percent_daily_positive_ma`  = "Percent Daily Positive MA",
         `new_cases_last_14_days`  = "New Cases last 14 days",
         `people_newly_tested` = "People Newly Tested",
-        `people_newly_tested_ma` = "People Newly Tested MA"  ))
+        `people_newly_tested_ma` = "People Newly Tested MA",
+        `percent_daily_positive_adj` = "Percent Daily Positive"))
 
 labels_28_day_deaths <- as_labeller(c(
         `daily_new_cases_ma` = "Daily New Cases (7 day MA)",
@@ -197,9 +198,15 @@ df_sc_positive <- data.frame(j_sco_uk_testing) %>%
   gather(key = "variable", value = "value",-date_notified)
 #head(df_sc_positive)
 
-# Daily positives from 1st August
+# Daily positives MA from 1st August
 df_sc_positive_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
   select(date_notified, percent_daily_positive_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive_zoom)
+
+# Daily positives MA and raw from 1st August
+df_sc_positive_raw_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, percent_daily_positive_ma, percent_daily_positive_adj) %>%
   gather(key = "variable", value = "value",-date_notified)
 #head(df_sc_positive_zoom)
 
@@ -216,6 +223,18 @@ ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) +
   p_geom  + theme_light() + theme(legend.position = "none")+
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Change image file name MA and RAW
+p_geom2 <-geom_line(aes(color = variable),size=0.75, axis.ticks.y = 1 ) 
+
+v_image_file_name = paste(today, "Percent daily positive MA + Raw zoom.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_positive_raw_zoom, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+scale_y_discrete(limits=c("1","2","3", "4", "5" ,"6", "7", "8", "9", "10", "11")) +
+  scale_color_manual(labels = c("Daily Positive Tests", "Average Daily Positive Tests"),values = c("gray80", "purple3") ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
 
 ```
 ```{r SCO_Tests_New_Cases}
