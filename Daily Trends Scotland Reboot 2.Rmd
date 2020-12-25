@@ -1,0 +1,332 @@
+---
+title: "Daily Trends Scotland"
+author: "Michael Kent"
+date: "06/12/2020"
+output: html_document
+---
+# Charts Wanted
+  Average New Cases by Health Board (all and set)
+  Testing v New Cases
+  UK-SCO Test Rate
+  Positivity Rates (UK and Sco)
+  
+
+
+
+# To Do List
+
+## List here all the charts to be drawn
+
+* 4 nations daily 28 days since deaths / 10^5
+* 4 nations weekly 28 days since  deaths / 10^5
+* 4 nations daily certificate deaths / 10^5
+* 4 nations weekly certificate deaths / 10^5
+  * check MK PHS-ONS deaths data
+* 4 nations positivity rates
+* __4 nations testing rates__
+* __Scotland deaths v NRO deaths__
+* ___Scotland testing with event labels___
+* Scotland 7 day cases by HB
+* Scotland 7 day positive rates by HB
+* Scotland 7 day cases positive rates by HB
+
+## Other actions
+
+- Check what other data is available on ONS/PHS and gov.scot sites.
+- Create text for each chart/set of charts.
+  - Do main picture and text with 'read more' sections.
+  - Do an index page.
+  - Transfer the code here to a script page with comments (lots!) 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+here()
+
+```
+
+# Reading in the data
+```{r datainput}
+############ UPDATED ###############
+# Standardised input - one dataset per spreadsheet/CSV
+
+# All Testing Data
+sco_uk_testing <- read_excel(here("data","d_SCO_UK_Testing.xlsx"))
+j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
+j_sco_uk_testing_zoom <- j_sco_uk_testing[-c(1:152), ]
+names(j_sco_uk_testing)
+
+# Deaths within 28 days
+uk_d_28_day_testing <- read_excel(here("data","d_deaths_within_28_days_reported_v2.xlsx"))
+j_uk_d_28_day_testing = janitor::clean_names(uk_d_28_day_testing)
+j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:211), ]  #   Data from 1st Agust
+names(j_uk_d_28_day_testing)
+
+# Cases by Health Board
+sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb.xlsx"))
+j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
+j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
+names(j_sc_d_cases_by_hb)
+
+```
+
+# Various Setup - labels, date etc
+```{r rarameter setup}
+# Create Datestamp
+today <- format(Sys.Date(), format="%Y-%m-%d ") 
+filedate <- format(Sys.Date(), format="%Y-%m-%d") 
+pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
+#save_folder <- paste("figures-",  today, sep = "", collapse=NULL)
+
+# Caption with website
+v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+
+# Caption - No Website
+#v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+
+# LABELS
+labels_SCO_UK_Test <- as_labeller(c(
+        `date_notified`  = "Date notified",
+        `uk_daily_tests`  = "UK Daily Tests",
+        `uk_daily_tests_per_100_000`  = "UK Daily Tests per 100,000",
+        `uk_daily_tests_per_100_000_ma`  = "UK Daily Tests per 100,000 MA",
+        `people_reported_negative`  = "People Reported Negative",
+        `people_reported_positive`  = "People Reported Positive",
+        `people_reported_total`  = "People Reported Total",
+        `daily_new_cases`  = "Daily New Cases",
+        `ratio_new_cases_to_people_newly_tested` = "ratio New cases to people newly tested",
+        `nhs_reported_tests_daily`  = "NHS Reported Tests Daily",
+        `nhs_reported_tests_cumulative`  = "NHS Reported Tests Cumulative",
+        `uk_gov_reported_tests_daily`  = "UK Gov Reported Tests Daily",
+        `uk_gov_reported_tests_cumulative`  = "UK Gov Reported Tests Cumulative",
+        `scot_daily_tests`  = "Scot daily tests",
+        `total_daily_positive_reported`  = "Total daily positive reported",
+        `percent_daily_positive`  = "Percent Daily Positive",
+        `people_with_first_test_7_days`  = "People with first test 7 days",
+        `positive_cases_7_days`  = "Positive cases 7 days",
+        `tests_reported_7_days`  = "Tests reported 7 days",
+        `positive_tests_7_days`  = "Positive tests 7 days",
+        `test_positivity_7_days`  = "Test positivity 7 days",
+        `scot_daily_tests_per_1_000`  = "Scot daily tests per 1,000",
+        `daily_new_cases_ma`  = "Daily New Cases MA",
+        `percent_dnc`  = "Percent DNC",
+        `daily_tests_7_day_ma`  = "daily tests 7 day MA",
+        `sco_daily_tests_per_100_000`  = "Sco daily tests per 100,000",
+        `sco_daily_tests_per_100_000_ma`  = "Sco Daily Tests per 100,000 MA",
+        `percent_daily_positive_ma`  = "Percent Daily Positive MA",
+        `new_cases_last_14_days`  = "New Cases last 14 days",
+        `people_newly_tested` = "People Newly Tested",
+        `people_newly_tested_ma` = "People Newly Tested MA",
+        `percent_daily_positive_adj` = "Percent Daily Positive"))
+
+labels_28_day_deaths <- as_labeller(c(
+        `daily_new_cases_ma` = "Daily New Cases (7 day MA)",
+        `daily_tests_7_day_ma` = "Daily Tests Reported (7 day MA)"))
+
+# LABELS
+labels_HB_Data <- as_labeller(c(
+        `nhs_ayrshire_arran`="NHS Ayrshire & Arran",
+        `nhs_borders`="NHS Borders",
+        `nhs_dumfries_galloway`="NHS Dumfries & Galloway",
+        `nhs_fife`="NHS Fife",
+        `nhs_forth_valley`="NHS Forth Valley",
+        `nhs_grampian`="NHS Grampian",
+        `nhs_greater_glasgow_clyde`="NHS Greater Glasgow & Clyde",
+        `nhs_highland`="NHS Highland",
+        `nhs_lanarkshire`="NHS Lanarkshire",
+        `nhs_lothian`="NHS Lothian",
+        `nhs_orkney`="NHS Orkney",
+        `nhs_shetland`="NHS Shetland",
+        `nhs_tayside`="NHS Tayside",
+        `nhs_western_isles`="NHS Western Isles",
+        `scotland`="Scotland"
+                  ))
+
+# Declare standard plot settings
+p_geom <-geom_line(aes(color = variable),size=0.75 ) 
+```
+# Extract Data and Plot
+
+# TESTING DATA
+```{r SCO_UK_Testing}
+###############################################################
+## Scottish and UK testing data
+# Prepare
+v_title="Testing rates for Scotland and all UK"
+v_xlabel = "Date"
+v_ylabel = "Tests per 100,000 population"
+v_image_file_name = paste(today, "Compare Testing Rates all.jpg", sep = "", collapse=NULL)
+v_image_file_name_zoom = paste(today, "Compare Testing Rates.jpg", sep = "", collapse=NULL)
+
+##-----------Sco/UK testing comparison ----------------------------------------
+# All Data
+df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
+p_geom  + theme_light() + 
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  # OK #
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# from 1st August
+df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + 
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  # OK #
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name_zoom), dpi = 180, width = 8, height = 6)
+#------------------------------------------------------------------------------
+# Daily Tests plus MA
+
+df_sc_test_ma_raw_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, z_scot_daily_tests_7_day_ma,nhs_reported_tests_daily_ma, uk_gov_reported_tests_daily_ma ) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive_zoom)
+# Change image file name MA and RAW
+v_title="Daily Tests for Scotland"
+v_xlabel = "Date"
+v_ylabel = "Number of Tests"
+v_image_file_name = paste(today, "Number of tests - Daily.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_test_ma_raw_zoom, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = c( "NHS Scotland Tests", "UK Tests", "Daily Tests"),values = c(  "purple3", "blue4", "green4") ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#------------------------------------------------------------------------------
+
+```
+```{r SCO_Daily_Positive }
+#---------- Daily Positive Data ------------------------------------------------
+# Prepare
+v_title="Positive test rates for Scotland"
+v_xlabel = "Date"
+v_ylabel = "Percentage tests positive"
+v_image_file_name = paste(today, "Compare Testing Rates.jpg", sep = "", collapse=NULL)
+v_image_file_name_zoom = paste(today, "Compare Testing Rates zoom.jpg", sep = "", collapse=NULL)
+
+# Daily positives all data
+df_sc_positive <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, percent_daily_positive_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive)
+
+# Daily positives MA from 1st August
+df_sc_positive_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, percent_daily_positive_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive_zoom)
+
+# Daily positives MA and raw from 1st August
+df_sc_positive_raw_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, percent_daily_positive_ma, percent_daily_positive_adj) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive_zoom)
+
+# Change image file name
+v_image_file_name = paste(today, "Percent daily positive MA.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_positive, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "none")+
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Change image file name
+v_image_file_name = paste(today, "Positive Test Rate (WHO) all.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "none")+
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Change image file name MA and RAW
+p_geom2 <-geom_line(aes(color = variable),size=0.75, axis.ticks.y = 1 ) 
+
+v_image_file_name = paste(today, "Positive Test Rate (WHO).jpg", sep = "", collapse=NULL)
+ggplot(df_sc_positive_raw_zoom, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+scale_y_discrete(limits=c("1","2","3", "4", "5" ,"6", "7", "8", "9", "10", "11")) +
+  scale_color_manual(labels = c("Daily Positive Tests", "Average Daily Positive Tests"),values = c("gray80", "purple3") ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Scotland UK Positivity
+# Change image file name MA and RAW
+# Daily positives MA from 1st August
+df_sc_uk_positive <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, scotland_test_positivity, uk_test_positivity) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_positive_zoom)
+
+p_geom2 <-geom_line(aes(color = variable),size=0.75, axis.ticks.y = 1 ) 
+
+v_image_file_name = paste(today, "UK-SCO Positive Test Rate (WHO).jpg", sep = "", collapse=NULL)
+ggplot(df_sc_uk_positive, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = c("Positive Tests - Scotland", "Positive Tests - whole UK"),values = c("purple3", "steelblue3") ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+
+
+
+```
+```{r SCO_Tests_New_Cases}
+#-----------------Compare Tests and new cases-----------------------------------
+# Second compares testing and case numbers.
+df_sc_t5 <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, daily_new_cases_ma, z_scot_daily_tests_7_day_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_t5)
+
+# Same data but from 1st August
+df_sc_t5_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, daily_new_cases_ma, z_scot_daily_tests_7_day_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_t5_zoom)
+
+# Same data but from 1st August
+df_sc_t5_pos_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+  select(date_notified, daily_new_cases_ma, z_scot_daily_tests_7_day_ma) %>%
+  gather(key = "variable", value = "value",-date_notified)
+#head(df_sc_t5_pos_zoom)
+# Then the Sco testing and case numbers
+# Change image file name
+##v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
+##ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+##  p_geom + theme_light() +theme(legend.position = "none")+ 
+##    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
+#ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+# Then the Sco testing and case numbers
+# Change image file name
+v_title="Daily New Cases and Tests"
+v_xlabel = "Date"
+v_ylabel = "Count"
+# Testing v positive tests
+v_image_file_name = paste(today, "Testing v New Cases.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+    p_geom + theme_light() +theme(legend.position = "none")+
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  facet_wrap(~ variable , labeller = labels_28_day_deaths , ncol=1, scales = "free_y")
+
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+v_image_file_name = paste(today, "Testing v New Cases zooms.jpg", sep = "", collapse=NULL)
+ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
+    p_geom + theme_light() +theme(legend.position = "none")+
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  facet_wrap(~ variable , labeller = labels_28_day_deaths, ncol=1, scales = "free_y")
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+
+```
+
+
+
+
+
+ 
+  
