@@ -29,6 +29,15 @@ j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
 #j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
 names(j_sc_d_cases_by_hb)
+## TEST EXCELL from raw spreadsheet  
+#sc_test_cases_by_hb <- read_excel(here("data","20201222_byHB.xlsx"))
+
+
+
+
+
+
+
 
 # LABELS
 labels_HB_Data <- as_labeller(c(
@@ -66,7 +75,7 @@ v_caption = "Source: Scottish gov statistics. Graph C TheTrue.Scot"
 v_xlabel = "Date"
 v_ylabel = "New Cases per 100,000 population"
 v_image_file_name = paste(today, "Average new cases by HB set.jpg", sep = "", collapse=NULL)
-v_image_file_name2 = paste(today, "Average new cases by HB set.jpg", sep = "", collapse=NULL)
+v_image_file_name2 = paste(today, "Average new cases by HB.jpg", sep = "", collapse=NULL)
 # Set up the default plot configuration.
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) 
 pset1 <-  geom_line(aes(color = variable),size=0.75 ,labeller = labels_HB_Data)
