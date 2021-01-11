@@ -1,0 +1,4 @@
+date,areaType,areaCode,areaName,newPeopleReceivingFirstDose,uniqueCasePositivityBySpecimenDateRollingSum,newPeopleReceivingSecondDose
+"2020-12-27",nation,N92000002,Northern Ireland,14948,,0
+"2020-12-20",nation,N92000002,Northern Ireland,12445,,0
+"2020-12-13",nation,N92000002,Northern Ireland,3623,,0

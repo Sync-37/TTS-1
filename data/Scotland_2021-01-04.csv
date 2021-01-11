@@ -1,0 +1,4 @@
+date,areaType,areaCode,areaName,newPeopleReceivingFirstDose,uniqueCasePositivityBySpecimenDateRollingSum,newPeopleReceivingSecondDose
+"2020-12-27",nation,S92000003,Scotland,33381,,0
+"2020-12-20",nation,S92000003,Scotland,39675,,0
+"2020-12-13",nation,S92000003,Scotland,19132,,0

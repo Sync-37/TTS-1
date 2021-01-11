@@ -1,0 +1,119 @@
+---
+title: "Cases by Health Board."
+author: "Michael Kent"
+date: "07/12/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+here()
+```
+Data from COVID-19+daily+data+-+by+NHS+Board+
+Input table cases_by_hb
+# Reading in the data
+This is rough and ready.  It needs much data manipulation of the spreadsheet then the data for the last few weeks is always poor.
+
+```{r datainput}
+# Standardised input - one dataset per spreadsheet/CSV
+
+# New with new names
+tests_4n <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P163")
+#tests_4n <- read_excel(here("data","d_cases_by_hb.xlsx"))
+# j_tests_4n <- read_excel(here("data","cases_by_hb.xlsx"))
+j_tests_4n = janitor::clean_names(tests_4n)
+j_tests_4n_zoom <- j_tests_4n[-c(1:205), ]
+#j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
+names(j_tests_4n)
+## TEST EXCELL from raw spreadsheet  
+#sc_test_cases_by_hb <- read_excel(here("data","20201222_byHB.xlsx"))
+
+
+
+
+
+
+
+
+# # LABELS
+labels_4n_data <- as_labeller(c(
+                  `nhs_ayrshire_arran`="NHS Ayrshire & Arran",
+                  `nhs_borders`="NHS Borders",
+                  `nhs_dumfries_galloway`="NHS Dumfries & Galloway",
+                  `nhs_fife`="NHS Fife",
+                  `nhs_forth_valley`="NHS Forth Valley",
+                  `nhs_grampian`="NHS Grampian",
+                  `nhs_greater_glasgow_clyde`="NHS Greater Glasgow & Clyde",
+                  `nhs_highland`="NHS Highland",
+                  `nhs_lanarkshire`="NHS Lanarkshire",
+                  `nhs_lothian`="NHS Lothian",
+                  `nhs_orkney`="NHS Orkney",
+                  `nhs_shetland`="NHS Shetland",
+                  `nhs_tayside`="NHS Tayside",
+                  `nhs_western_isles`="NHS Western Isles",
+                  `scotland`="Scotland"
+                  ))
+today <- format(Sys.Date(), format="%Y-%m-%d ")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+```
+
+```{r two}
+# First data frame is for Sco/UK testing comparison.
+df_tests_4n <- data.frame(j_tests_4n) %>%
+  select(date, scotland:uk_average) %>%
+  gather(key = "variable", value = "value",-date)
+#head(df_uk_d_28_day_testing)
+
+
+# First, draw the Sco/UK testing
+# Main
+
+# Caption with website
+v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+
+# Caption - No Website
+#v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+
+v_title="New Covid 19 cases by Health Board (per 100,000 population)"
+v_xlabel = "Date"
+v_ylabel = "New Cases per 100,000 population"
+v_image_file_name = paste(today, "Average new cases per 100k by HB set.jpg", sep = "", collapse=NULL)
+v_image_file_name2 = paste(today, "Average new cases per 100k by HB.jpg", sep = "", collapse=NULL)
+# Set up the default plot configuration.
+p <- ggplot(df_tests_4n, aes(x = date, y = value)) 
+pset1 <-  geom_line(aes(color = variable),size=0.75 )#,labeller = labels_HB_Data)
+pset2 <-  theme_light() 
+pset3 <-  labs(x = v_xlabel,
+           y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "")
+
+p + pset1 + pset2 + pset3 # Plot group chart
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
+#----------------
+p <- ggplot(df_tests_4n, aes(x = date, y = value)) + 
+  geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
+  scale_color_manual(labels = c("NHS Ayrshire & Arran", "NHS Borders", "NHS Dumfries & Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian", "NHS Greater Glasgow & Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland", "NHS Tayside", "NHS Western Isles" ), values = cbbPalette) +
+      labs(x = v_xlabel,
+           y = v_ylabel, 
+          title = v_title,
+          caption = v_caption,
+          color = "")
+p 
+                   # Plot group chart
+ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
+#----------------
+p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_4n_data, as.table = TRUE)  
+p +  p_facet + theme(legend.position = "none")
+
+# plot matrix of individual charts.
+ggsave(here("figures", v_image_file_name2 ), dpi = 360, width = 12, height = 6)
+
+```

@@ -23,7 +23,8 @@ This is rough and ready.  It needs much data manipulation of the spreadsheet the
 # Standardised input - one dataset per spreadsheet/CSV
 
 # New with new names
-sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb_7day.xlsx"))
+sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX333")
+#sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb_7day.xlsx"))
 # j_sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]

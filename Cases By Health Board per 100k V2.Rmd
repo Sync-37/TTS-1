@@ -23,7 +23,8 @@ This is rough and ready.  It needs much data manipulation of the spreadsheet the
 # Standardised input - one dataset per spreadsheet/CSV
 
 # New with new names
-sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb.xlsx"))
+sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
+#sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb.xlsx"))
 # j_sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
@@ -58,6 +59,8 @@ labels_HB_Data <- as_labeller(c(
                   `scotland`="Scotland"
                   ))
 today <- format(Sys.Date(), format="%Y-%m-%d ") 
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 ```
 
 ```{r two}
@@ -97,6 +100,7 @@ p + pset1 + pset2 + pset3 # Plot group chart
 #----------------
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
+  scale_color_manual(labels = c("NHS Ayrshire & Arran", "NHS Borders", "NHS Dumfries & Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian", "NHS Greater Glasgow & Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland", "NHS Tayside", "NHS Western Isles" ), values = cbbPalette) +
       labs(x = v_xlabel,
            y = v_ylabel, 
           title = v_title,
