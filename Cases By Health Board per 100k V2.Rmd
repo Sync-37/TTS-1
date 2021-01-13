@@ -14,6 +14,8 @@ library(here)
 library(janitor)
 here()
 ```
+##  MASTER
+
 Data from COVID-19+daily+data+-+by+NHS+Board+
 Input table cases_by_hb
 # Reading in the data
@@ -24,21 +26,9 @@ This is rough and ready.  It needs much data manipulation of the spreadsheet the
 
 # New with new names
 sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
-#sc_d_cases_by_hb <- read_excel(here("data","d_cases_by_hb.xlsx"))
-# j_sc_d_cases_by_hb <- read_excel(here("data","cases_by_hb.xlsx"))
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
-#j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:152), ]  #   Data from 1st Agust
-names(j_sc_d_cases_by_hb)
-## TEST EXCELL from raw spreadsheet  
-#sc_test_cases_by_hb <- read_excel(here("data","20201222_byHB.xlsx"))
-
-
-
-
-
-
-
+# names(j_sc_d_cases_by_hb)
 
 # LABELS
 labels_HB_Data <- as_labeller(c(
@@ -65,39 +55,20 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"
 
 ```{r two}
 # First data frame is for Sco/UK testing comparison.
-df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb_zoom) %>%
-  select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
-  gather(key = "variable", value = "value",-date_notified)
-#head(df_uk_d_28_day_testing)
-
-
-# First, draw the Sco/UK testing
-# Main
-
+v_title="New Covid 19 cases by Health Board (per 100,000 population)"
+v_xlabel = "Date"
+v_ylabel = "New Cases per 100,000 population"
+v_image_file_name = paste(today, "Average new cases per 100k by HB set.jpg", sep = "", collapse=NULL)
+v_image_file_name2 = paste(today, "Average new cases per 100k by HB.jpg", sep = "", collapse=NULL)
 # Caption with website
 v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
 
 # Caption - No Website
 #v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
 
-v_title="New Covid 19 cases by Health Board (per 100,000 population)"
-v_xlabel = "Date"
-v_ylabel = "New Cases per 100,000 population"
-v_image_file_name = paste(today, "Average new cases per 100k by HB set.jpg", sep = "", collapse=NULL)
-v_image_file_name2 = paste(today, "Average new cases per 100k by HB.jpg", sep = "", collapse=NULL)
-# Set up the default plot configuration.
-p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) 
-pset1 <-  geom_line(aes(color = variable),size=0.75 ,labeller = labels_HB_Data)
-pset2 <-  theme_light() 
-pset3 <-  labs(x = v_xlabel,
-           y = v_ylabel, 
-          title = v_title,
-          caption = v_caption,
-          color = "")
-
-p + pset1 + pset2 + pset3 # Plot group chart
-#ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
-#----------------
+df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb_zoom) %>%
+  select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
+  gather(key = "variable", value = "value",-date_notified)
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
   scale_color_manual(labels = c("NHS Ayrshire & Arran", "NHS Borders", "NHS Dumfries & Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian", "NHS Greater Glasgow & Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland", "NHS Tayside", "NHS Western Isles" ), values = cbbPalette) +
@@ -106,14 +77,11 @@ p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) +
           title = v_title,
           caption = v_caption,
           color = "")
-p 
-                   # Plot group chart
+p +
 ggsave(here("figures", v_image_file_name), dpi = 180, width = 12, height = 6)
 #----------------
 p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_HB_Data, scales = "free_y", as.table = TRUE)  
-p +  p_facet + theme(legend.position = "none")
-
-# plot matrix of individual charts.
+p +  p_facet + theme(legend.position = "none") +
 ggsave(here("figures", v_image_file_name2 ), dpi = 360, width = 12, height = 6)
 
 ```

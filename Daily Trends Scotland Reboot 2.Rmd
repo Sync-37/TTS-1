@@ -48,6 +48,18 @@ library(janitor)
 #install.packages("viridis")  # Install
 library("viridis")           # Load
 here()
+# Now set up some strings etc
+#For LIVE data
+str_path = "figures/website"
+
+#For TEST data
+#str_path = "figures"
+
+# Create Datestamp
+today <- format(Sys.Date(), format="%Y-%m-%d ") 
+filedate <- format(Sys.Date(), format="%Y-%m-%d") 
+pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
+#save_folder <- paste("figures-",  today, sep = "", collapse=NULL)
 
 ```
 
@@ -71,7 +83,7 @@ j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:211), ]  #   Data from 
 #names(j_uk_d_28_day_testing)
 
 #4 Nation Cases
-sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "T3:X400")
+sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V400")
 j_sc_nation_cases = janitor::clean_names(sc_nation_cases)
 j_sc_nation_cases_zoom <- j_sc_nation_cases[-c(1:224), ]
 names(j_sc_nation_cases)
@@ -92,11 +104,7 @@ names(j_sc_nation_tests)
 
 # Various Setup - labels, date etc
 ```{r rarameter setup}
-# Create Datestamp
-today <- format(Sys.Date(), format="%Y-%m-%d ") 
-filedate <- format(Sys.Date(), format="%Y-%m-%d") 
-pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
-#save_folder <- paste("figures-",  today, sep = "", collapse=NULL)
+
 
 # Caption with website
 v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
@@ -192,7 +200,7 @@ ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) +
 p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # from 1st August
 df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
@@ -202,7 +210,7 @@ ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) +
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = c("purple3", "steelblue3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name_zoom), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name_zoom), dpi = 180, width = 8, height = 6)
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # from 1st August
 v_image_file_name = paste(today, "Compare Testing Rates all RAW.jpg", sep = "", collapse=NULL)
@@ -213,7 +221,7 @@ ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) +
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland Daily", "Scotland Smoothed", "UK Daily", "UK Smoothed"),values = c( "plum1", "purple3","steelblue1", "blue4")) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #------------------------------------------------------------------------------
@@ -232,7 +240,7 @@ ggplot(df_sc_test_ma_raw_zoom, aes(x = date_notified, y = value)) +
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = c( "NHS Scotland Labs", "UK Labs", "Total Daily Tests"),values = c(  "purple3", "blue4", "green4") ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 #------------------------------------------------------------------------------
 # Daily Tests Scot/UK/Total with raw
 
@@ -250,7 +258,7 @@ ggplot(df_sc_test_ma_raw_zoom, aes(x = date_notified, y = value)) +
   scale_color_manual(labels = c("NHS Scotland Labs Raw",  "NHS Scotland Labs", "UK Labs Raw", "UK Labs"),values = c( "plum1", "purple3","steelblue1", "blue4") ) +  
 #  scale_color_manual(labels = c("NHS Scotland Labs Raw",  "NHS Scotland Labs", "UK Labs Raw", "UK Labs", "Total Daily Tests"),values = c( "plum1", "purple3","steelblue1", "blue4", "green4") ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 #------------------------------------------------------------------------------
 # ALL OK Xday
@@ -273,7 +281,7 @@ v_ylabel = "Percentage tests positive"
 # ggplot(df_sc_positive, aes(x = date_notified, y = value)) + 
 #   p_geom  + theme_light() + theme(legend.position = "none")+
 #   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-# ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+# ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # # Daily positives MA from 1st August
 # df_sc_positive_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
@@ -283,7 +291,7 @@ v_ylabel = "Percentage tests positive"
 # ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
 #   p_geom  + theme_light() + theme(legend.position = "none")+
 #   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-# ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+# ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 v_image_file_name = paste(today, "Compare Testing Rates.jpg", sep = "", collapse=NULL)
 v_image_file_name_zoom = paste(today, "Compare Testing Rates zoom.jpg", sep = "", collapse=NULL)
@@ -315,14 +323,14 @@ v_image_file_name = paste(today, "Percent daily positive MA.jpg", sep = "", coll
 ggplot(df_sc_positive, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "none")+
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Change image file name
 v_image_file_name = paste(today, "Positive Test Rate (WHO) all.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_positive_zoom, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "none")+
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Change image file name MA and RAW
 p_geom2 <-geom_line(aes(color = variable),size=0.75, axis.ticks.y = 1 ) 
@@ -334,7 +342,7 @@ ggplot(df_sc_positive_raw_zoom, aes(x = date_notified, y = value)) +
 scale_y_discrete(limits=c("1","2","3", "4", "5" ,"6", "7", "8", "9", "10", "11")) +
   scale_color_manual(labels = c("Daily Positive Tests", "Average Daily Positive Tests"),values = c("gray80", "purple3") ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Scotland UK Positivity
 # Change image file name MA and RAW
@@ -357,7 +365,7 @@ ggplot(df_sc_uk_positive, aes(x = date_notified, y = value)) +
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = c("Positive Tests - Scotland", "Positive Tests - whole UK"),values = c("purple3", "steelblue3") ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here("figures/website", v_image_file_name), dpi = 180, width = 8, height = 6)
 
 
 
@@ -388,7 +396,7 @@ df_sc_t5_pos_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
 ##ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
 ##  p_geom + theme_light() +theme(legend.position = "none")+ 
 ##    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
-#ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+#ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Then the Sco testing and case numbers
 # Change image file name
@@ -402,14 +410,14 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test , ncol=1, scales = "free_y")
 
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 v_image_file_name = paste(today, "Testing v New Cases zooms.jpg", sep = "", collapse=NULL)
 ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
     p_geom + theme_light() +theme(legend.position = "none")+
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 ```
 ```{r TESTS <-> CASES}
@@ -447,7 +455,7 @@ ggplot(df_sc_nation_cases_zoom, aes(x = date, y = value)) +
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 #  facet_wrap(~ variable , labeller = labels_SCO_UK_Test , ncol=1, scales = "free_y")
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Change image file name
 v_title="Daily New Tests per 100,000"
@@ -460,7 +468,7 @@ ggplot(df_j_sc_nation_tests, aes(x = date, y = value)) +
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 #  facet_wrap(~ variable , labeller = labels_SCO_UK_Test , ncol=1, scales = "free_y")
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 
 
@@ -472,7 +480,7 @@ ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
 #     p_geom + theme_light() +theme(legend.position = "none")+
 #       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
 #   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
-# ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+# ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 ```
 
@@ -498,14 +506,14 @@ v_image_file_name = paste(today, "Deaths within 28 days.jpg", sep = "", collapse
 ggplot(df_uk_d28_pos, aes(x = date, y = new_deaths28days_by_death_date)) + 
   geom_line(aes(color = area_name),size=0.5 )   + #theme_light() + 
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 # Change image file name
 # v_image_file_name = paste(today, "Deaths within 28 days zoom.jpg", sep = "", collapse=NULL)
 # ggplot(df_uk_d28_pos_zoom, aes(x = date, y = new_deaths28days_by_death_date)) + 
 #   geom_line(aes(color = area_name),size=0.75 )   + theme_light() + 
 #   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-# ggsave(here("figures", v_image_file_name), dpi = 180, width = 8, height = 6)
+# ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
 
 ```
 
