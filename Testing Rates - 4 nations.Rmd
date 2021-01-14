@@ -68,12 +68,6 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"
 df_tests_4n <- data.frame(j_tests_4n) %>%
   select(date, scotland:uk_average) %>%
   gather(key = "variable", value = "value",-date)
-#head(df_uk_d_28_day_testing)
-
-
-# First, draw the Sco/UK testing
-# Main
-
 # Caption with website
 v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
 
@@ -114,6 +108,11 @@ p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_4n_data, as.table = 
 p +  p_facet + theme(legend.position = "none")
 
 # plot matrix of individual charts.
+v_image_file_name = "hkddlgn_jj8_"
 ggsave(here("figures", v_image_file_name2 ), dpi = 360, width = 12, height = 6)
+f2 = paste( v_image_file_name, 'fb.jpg', sep = "", collapse=NULL)
+#f2 = "hkddlgn_jj8_fb.jpg"
+ggsave(here("figures", f2), dpi = 280, width = 8, height = 5)
+#ggsave(here("figures", "hkddlgn_jj8_fb.jpg"), dpi = 280, width = 8, height = 5)
 
 ```

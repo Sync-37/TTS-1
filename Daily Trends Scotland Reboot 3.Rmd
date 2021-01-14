@@ -4,6 +4,26 @@ author: "Michael Kent"
 date: "06/12/2020"
 output: html_document
 ---
+<img
+ srcset="
+  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)2240.jpg 2240w,
+  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1960.jpg 1960w,
+  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1120.jpg 1120w,
+  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)560.jpg 560w,
+   "
+ src="https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)fb.jpg"
+>
+
+<img
+ srcset="
+    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)2240.jpg 2240w,
+    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1680.jpg 1680w,
+    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1120.jpg 1120w,
+    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)560.jpg 560w,
+   "
+src="https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)fb.jpg"
+>
+
 
 
 ```{r setup, include=FALSE}
@@ -172,14 +192,14 @@ df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
 ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = cset_x2 ) +
-  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 #  ggsave(here(str_path, "Compare Testing MA Scot-UK all.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Compare_Testing_MA_Scot-UK_all_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 # from 1st August
 df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
@@ -188,14 +208,14 @@ df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
 ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = cset_x2 ) +  # OK #
-  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 #  ggsave(here(str_path, "Compare Testing MA Scot-UK zoom.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Compare_Testing_MA_Scot-UK_zoom_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # from 1st August
@@ -205,14 +225,14 @@ df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
 ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland Daily", "Scotland Smoothed", "UK Daily", "UK Smoothed"),values = cset_x4 ) +  
-  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 #  ggsave(here(str_path, "Compare Testing Raw+MA Scot-UK zoom.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Compare_Testing_Raw+MA_Scot-UK_zoom_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #------------------------------------------------------------------------------
@@ -243,14 +263,14 @@ v_ylabel = "Number of Tests"
 ggplot(df_sc_test_ma_raw_zoom, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = c("NHS Scotland Labs Daily",  "NHS Scotland Labs Smoothed", "UK Labs Daily", "UK Labs Smoothed"),values = cset_x4) +  
-  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 #  ggsave(here(str_path, "Processing Tests In Scotland.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Processing_Tests_in_Scotland_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 #------------------------------------------------------------------------------
 # FILE NAMES AND PATHS DONE#
@@ -271,11 +291,11 @@ ggplot(df_sc_uk_positive, aes(x = date_notified, y = value)) +
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
 
 v_image_file_name =  "UK-SCO_Positive_Test_Rate_(WHO)_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
   
 ```
 Then...
@@ -299,22 +319,22 @@ p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) +
 p 
 #ggsave(here(str_path, "Average new cases per 100k by HB.jpg"), dpi = 180, width = 12, height = 6)
 v_image_file_name =  "Average_new_cases_per_100k_by_HB_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 #----------------
 p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_HB_Data, scales = "free_y", as.table = TRUE)  
-p +  p_facet + theme(legend.position = "none") +
+p +  p_facet + theme(legend.position = "none") 
 #ggsave(here(str_path, "Average new cases per 100k by HB set.jpg" ), dpi = 360, width = 12, height = 6)
 v_image_file_name =  "Average_new_cases_per_100k_by_HB_set_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 ############################################
 
@@ -337,22 +357,22 @@ p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) +
 p 
 #ggsave(here(str_path, "Average new cases by HB.jpg"), dpi = 180, width = 12, height = 6)
 v_image_file_name =  "Average_new_cases_by_HB_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 #----------------
 p_facet <- facet_wrap(~ variable, ncol=4, labeller = labels_HB_Data, scales = "free_y", as.table = TRUE)  
 p +  p_facet + theme(legend.position = "none")
 #ggsave(here(str_path, "Average new cases per 100k by HB set.jpg" ), dpi = 360, width = 12, height = 6)
 v_image_file_name =  "Average_new_cases_by_HB_set_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 ```
 
@@ -396,11 +416,11 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
 
 #ggsave(here(str_path, "Testing v New Cases.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Testing_v_New_Cases_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 
 ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
@@ -409,11 +429,11 @@ ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
 #ggsave(here(str_path, "Testing v New Cases zoom.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Testing_v_New_Cases_zoom_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 
 ```
@@ -455,11 +475,11 @@ ggplot(df_sc_nation_cases_zoom, aes(x = date, y = value)) +
 #  facet_wrap(~ variable , labeller = labels_SCO_UK_Test , ncol=1, scales = "free_y")
 #ggsave(here(str_path, "Daily New Cases.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Daily_New_Cases_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 
 # Change image file name
@@ -470,15 +490,15 @@ v_ylabel = "Count"
 ggplot(df_j_sc_nation_tests, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
-      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 #  facet_wrap(~ variable , labeller = labels_SCO_UK_Test , ncol=1, scales = "free_y")
 #ggsave(here(str_path, "Daily New Tests.jpg"), dpi = 180, width = 8, height = 6)
 v_image_file_name =  "Daily_New_Tests_"
-ggsave(here(str_path, paste(today, v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
-ggsave(here(str_path, paste(today, v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 
 # v_image_file_name = paste(today, "Testing v New Cases zooms.jpg", sep = "", collapse=NULL)
