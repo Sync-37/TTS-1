@@ -70,7 +70,7 @@ j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:211), ]  #   Data from 
 sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX333")
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
-names(j_sc_d_cases_by_hb)
+#names(j_sc_d_cases_by_hb)
 
 # Cases by Health Board per 100,000
 sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
@@ -89,13 +89,19 @@ sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nati
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 #names(j_sc_nation_tests)
 
+#Vaccinations
+#nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "testVaccinations", range = "AF4:AK10")
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AF4:AK10")
+j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
+names(j_nation_vaccinations)
+
 ```
 
 # Various Setup - labels, date etc
 ```{r parameter setup}
 
 # Caption with website
-v_caption = paste( "Chart © Thetrue.scot \n","Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+v_caption = paste( "Chart © Thetrue.scot \n","Data Source:- Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
 
 # Caption - No Website
 #v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
@@ -165,8 +171,12 @@ p_geom <-geom_line(aes(color = variable),size=0.6 )
 
 lset_HB = c("NHS Ayrshire & Arran", "NHS Borders", "NHS Dumfries & Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian", "NHS Greater Glasgow & Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland", "NHS Tayside", "NHS Western Isles" )
 
+
 cset_x2 = c("purple3", "steelblue3")
 cset_x4 = c( "plum1", "purple3","steelblue1", "blue4")
+#cset_x5 = c( "plum1", "purple3","steelblue1", "blue4", "black")
+#lset_Nations = c("England",	"Northern Ireland", "Scotland",	"Wales", "UK")
+
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 ```
@@ -511,6 +521,36 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 ```
 
 ```{r}
+#cset_x5 = c( "plum1", "purple3","steelblue1", "blue4", "black")
+lset_Nations = c("England",	"Northern Ireland", "Scotland", "UK" ,	"Wales")
+cset_x5 = c( "blue3", "green3", "purple3","grey50", "red3")
+
+#j_nation_vaccinations
+#---------- Daily Positive Data ------------------------------------------------
+v_title="UK Nation Vaccination Rates (per 100 people)"
+v_xlabel = "Date"
+v_ylabel = "Doses Administered"
+
+df_nation_vaccinations <- data.frame(j_nation_vaccinations) %>%
+  select(date, england:uk)  %>%
+  gather(key = "variable", value = "value",-date)
+ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
+  theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_Nations, values =  cset_x5 ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
+
+v_image_file_name =  "UK_Nations_Vaccinations_"
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+
+```
+
+
+```{r not used}
+
 #------- Deaths within 28 days of positive test (UK)----------------------------
 ## UK 28 days death data
 #
