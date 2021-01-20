@@ -56,21 +56,42 @@ pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
 
 # All Testing Data
 sco_uk_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "d_SCO_UK_Testing", skip = 3)
+col_name <- names(sco_uk_testing)
+
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
 j_sco_uk_testing_zoom <- j_sco_uk_testing[-c(1:152), ]
-#names(j_sco_uk_testing)
+col_name2 <- names(j_sco_uk_testing)
 
-# Deaths within 28 days
-uk_d_28_day_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "28 day tests")
-j_uk_d_28_day_testing = janitor::clean_names(uk_d_28_day_testing)
-j_uk_d_28_day_testing_zoom <- j_uk_d_28_day_testing[-c(1:211), ]  #   Data from 1st Agust
-#names(j_uk_d_28_day_testing)
+tlabeller = labeller(col_name = col_name2)
+```
+
+```{r}
+
+# Deaths by certificate
+uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V60")
+j_uk_d_certificate = janitor::clean_names(uk_d_certificate)
+names(j_uk_d_certificate)
+# Deaths within 28 days   
+uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V320")
+j_uk_d_28_days = janitor::clean_names(uk_d_28_days)
+names(j_uk_d_28_days)
+
+```
+
+```{r}
 
 # Cases by Health Board MA
 sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX333")
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
-#names(j_sc_d_cases_by_hb)
+names(j_sc_d_cases_by_hb)
+col_names <- names(sc_d_cases_by_hb)
+col_names_j <- names(j_sc_d_cases_by_hb)
+
+col_names
+
+#labels_HB_Data <- labeller(c(.cols = col_name))
+#labels_HB_Data
 
 # Cases by Health Board per 100,000
 sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
@@ -91,9 +112,9 @@ j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 
 #Vaccinations
 #nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "testVaccinations", range = "AF4:AK10")
-nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AF4:AK10")
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AF4:AK15")
 j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
-names(j_nation_vaccinations)
+#names(j_nation_vaccinations)
 
 ```
 
@@ -178,15 +199,84 @@ cset_x4n = c( "blue3", "green3", "purple3","grey50")
 cset_x5 = c( "blue3", "green3", "purple3","grey50", "red3")
 
 lset_4Nations = c("England",	"Northern Ireland", "Scotland",	"Wales")
+lset_2Nations = c("England", "Scotland")
 lset_Nations = c("England",	"Northern Ireland", "Scotland", "UK" ,	"Wales")
 
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 ```
 # Extract Data and Plot
+ [1] "date"                        "england_weekly"              "england_cumulative"          "northern_ireland_weekly"    
+ [5] "northern_ireland_cumulative" "scotland_weekly"             "scotland_cumulative"         "wales_weekly"               
+ [9] "wales_cumulative"            "uk_weekly"
 
-I've removed the 'image file name variable, just naming the files in situ.
+```{r}
+# Weekly deaths - certificated
 
+df_uk_d_certificate <- data.frame(j_uk_d_certificate) %>%
+  select(date,  england_weekly, northern_ireland_weekly, scotland_weekly, wales_weekly ) %>%
+  gather(key = "variable", value = "value",-date)
+v_title="Weekly Deaths with Covid on Certificate (per 100,000)"
+v_ylabel = "Number of Ceaths"
+ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_4Nations,values = cset_x4n) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
+#  ggsave(here(str_path, "Processing Tests In Scotland.jpg"), dpi = 180, width = 8, height = 6)
+v_image_file_name =  "Deaths_Covid_on_cert_"
+ ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+# Scot-Eng only 
+ df_uk_d_certificate <- data.frame(j_uk_d_certificate) %>%
+  select(date,  england_weekly, scotland_weekly ) %>%
+  gather(key = "variable", value = "value",-date)
+ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_2Nations,values = cset_x2) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
+v_image_file_name =  "Deaths_Covid_on_cert_Eng_Sco"
+ ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+
+ # Weekly deaths - 28 days of test
+
+df_uk_d_certificate <- data.frame(j_uk_d_28_days) %>%
+  select(date,  england_daily, northern_ireland_daily, scotland_daily, wales_daily ) %>%
+  gather(key = "variable", value = "value",-date)
+v_title="Weekly Deaths with Covid on Certificate (per 100,000)"
+v_ylabel = "Number of Ceaths"
+ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_4Nations,values = cset_x4n) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
+v_image_file_name =  "Deaths_28_days_"
+ ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+# Scot-Eng only 
+  df_uk_d_certificate <- data.frame(j_uk_d_28_days) %>%
+  select(date,  england_daily, scotland_daily ) %>%
+  gather(key = "variable", value = "value",-date)
+ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_2Nations,values = cset_x2) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
+v_image_file_name =  "Deaths_28_days_Eng_Sco"
+ ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
+
+```
 
 ```{r SCO_UK_Testing}
 ###############################################################
@@ -481,7 +571,7 @@ df_j_sc_4nation_tests <- data.frame(j_sc_nation_tests) %>%
 # Change image file name
 v_title="Daily New Cases per 100,000"
 v_xlabel = "Date"
-v_ylabel = "Count"
+v_ylabel = "Cases"
 # Testing v positive tests
 ggplot(df_sc_nation_cases_zoom, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
@@ -509,7 +599,7 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 # Change image file name
 v_title="Daily New Tests per 100,000"
 v_xlabel = "Date"
-v_ylabel = "Count"
+v_ylabel = "Tests"
 # Testing v positive tests
 ggplot(df_j_sc_nation_tests, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
@@ -524,6 +614,7 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 ################################################################
 ggplot(df_j_sc_4nation_tests, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+   
+#    scale_y_discrete(limits=c("0","100","200", "300", "400" ,"500", "600", "700", "800", "900", "1000")) +
     scale_color_manual(labels = lset_4Nations,values = cset_x4n ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 v_image_file_name =  "Daily_New_Tests_All_"
@@ -554,7 +645,7 @@ v_xlabel = "Date"
 v_ylabel = "Doses Administered"
 
 df_nation_vaccinations <- data.frame(j_nation_vaccinations) %>%
-  select(date, england:uk)  %>%
+  select(date, england:wales)  %>%
   gather(key = "variable", value = "value",-date)
 ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
   theme_light() + theme(legend.position = "top")+ 

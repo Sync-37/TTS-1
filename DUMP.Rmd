@@ -1,0 +1,53 @@
+---
+title: "Untitled"
+author: "Michael Kent"
+date: "19/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+#install.packages("viridis")  # Install
+library("viridis")           # Load
+here()
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+#sc_titles <- read_excel("data/S_Testing_data.xlsx",  sheet = "dhb", range = "A1:D1")
+#sc_data<- read_excel("data/S_Testing_data.xlsx",  sheet = "dhb", range = "A2:D100")
+sc_titles <- data.frame("Data Field 1", "Data Field 2", "Data Field 3", "Data Field 4")
+sc_data <- data.frame(c("data_1", "data_1", "data_1", "data_1"))
+
+
+col_names <- names(sc_titles)
+col_names_data <- names(sc_data)
+col_names
+col_names_data
+
+sc_labels <- as_labeller(c(
+        `data_1` = "Data Field 1",
+        `data_2` = "Data Field 2",
+        `data_3` = "Data Field 3",
+        `data_4` = "Data Field 4" ))
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
