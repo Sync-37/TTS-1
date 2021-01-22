@@ -37,10 +37,10 @@ library("viridis")           # Load
 here()
 # Now set up some strings etc
 #For LIVE data
-str_path = "figures/website"
+#str_path = "figures/website"
 
 #For TEST data
-#str_path = "figures"
+str_path = "figures"
 
 # Create Datestamps
 today <- format(Sys.Date(), format="%Y-%m-%d ") 
@@ -56,65 +56,38 @@ pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
 
 # All Testing Data
 sco_uk_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "d_SCO_UK_Testing", skip = 3)
-col_name <- names(sco_uk_testing)
-
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
-j_sco_uk_testing_zoom <- j_sco_uk_testing[-c(1:152), ]
-col_name2 <- names(j_sco_uk_testing)
-
-tlabeller = labeller(col_name = col_name2)
-```
-
-```{r}
 
 # Deaths by certificate
 uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V60")
 j_uk_d_certificate = janitor::clean_names(uk_d_certificate)
-names(j_uk_d_certificate)
+
 # Deaths within 28 days   
 uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V320")
 j_uk_d_28_days = janitor::clean_names(uk_d_28_days)
-names(j_uk_d_28_days)
-
-```
-
-```{r}
 
 # Cases by Health Board MA
 sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX333")
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
-j_sc_d_cases_by_hb_zoom <- j_sc_d_cases_by_hb[-c(1:205), ]
-names(j_sc_d_cases_by_hb)
-col_names <- names(sc_d_cases_by_hb)
-col_names_j <- names(j_sc_d_cases_by_hb)
-
-col_names
-
-#labels_HB_Data <- labeller(c(.cols = col_name))
-#labels_HB_Data
 
 # Cases by Health Board per 100,000
 sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
 j_sc_d_cases_by_hb100 = janitor::clean_names(sc_d_cases_by_hb100)
-j_sc_d_cases_by_hb100_zoom <- j_sc_d_cases_by_hb100[-c(1:205), ]
-# names(j_sc_d_cases_by_hb)
 
 #4 Nation Cases
 sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V400")
 j_sc_nation_cases = janitor::clean_names(sc_nation_cases)
-j_sc_nation_cases_zoom <- j_sc_nation_cases[-c(1:224), ]
-#names(j_sc_nation_cases)
 
 #4 Nation Tests
 sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P175")
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
-#names(j_sc_nation_tests)
 
 #Vaccinations
-#nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "testVaccinations", range = "AF4:AK10")
-nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AF4:AK15")
+daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "W4:AB25")
+j_d_nation_vaccinations = janitor::clean_names(daily_nation_vaccinations)
+
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AH4:AM25")
 j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
-#names(j_nation_vaccinations)
 
 ```
 
@@ -126,6 +99,9 @@ v_caption = paste( "Chart © Thetrue.scot \n","Data Source:- Scottish and UK gov
 
 # Caption - No Website
 #v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
+
+# Start date for zoomed charts
+wave2date = "2020-08-01"
 
 # LABELS
 labels_SCO_UK_Test <- as_labeller(c(
@@ -216,8 +192,9 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"
 df_uk_d_certificate <- data.frame(j_uk_d_certificate) %>%
   select(date,  england_weekly, northern_ireland_weekly, scotland_weekly, wales_weekly ) %>%
   gather(key = "variable", value = "value",-date)
+  df_uk_d_certificate <-filter(df_uk_d_certificate, date >= wave2date)
 v_title="Weekly Deaths with Covid on Certificate (per 100,000)"
-v_ylabel = "Number of Ceaths"
+v_ylabel = "Number of Deaths"
 ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = lset_4Nations,values = cset_x4n) +  
@@ -233,9 +210,10 @@ v_image_file_name =  "Deaths_Covid_on_cert_"
  df_uk_d_certificate <- data.frame(j_uk_d_certificate) %>%
   select(date,  england_weekly, scotland_weekly ) %>%
   gather(key = "variable", value = "value",-date)
+  df_uk_d_certificate <-filter(df_uk_d_certificate, date >= wave2date)
 ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
-  scale_color_manual(labels = lset_2Nations,values = cset_x2) +  
+  scale_color_manual(labels = lset_2Nations,values = c("steelblue3","purple3")) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 v_image_file_name =  "Deaths_Covid_on_cert_Eng_Sco"
  ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
@@ -246,12 +224,14 @@ v_image_file_name =  "Deaths_Covid_on_cert_Eng_Sco"
 
  # Weekly deaths - 28 days of test
 
-df_uk_d_certificate <- data.frame(j_uk_d_28_days) %>%
+
+df_uk_d_28_days <- data.frame(j_uk_d_28_days) %>%
   select(date,  england_daily, northern_ireland_daily, scotland_daily, wales_daily ) %>%
   gather(key = "variable", value = "value",-date)
-v_title="Weekly Deaths with Covid on Certificate (per 100,000)"
-v_ylabel = "Number of Ceaths"
-ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  df_uk_d_28_days <-filter(df_uk_d_28_days, date >= wave2date)
+v_title="Daily Deaths within 28 days of a test (per 100,000)"
+v_ylabel = "Number of Deaths"
+ggplot(df_uk_d_28_days, aes(x = date, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = lset_4Nations,values = cset_x4n) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -262,12 +242,13 @@ v_image_file_name =  "Deaths_28_days_"
  ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
  ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 # Scot-Eng only 
-  df_uk_d_certificate <- data.frame(j_uk_d_28_days) %>%
+  df_uk_d_28_days <- data.frame(j_uk_d_28_days) %>%
   select(date,  england_daily, scotland_daily ) %>%
   gather(key = "variable", value = "value",-date)
-ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
+  df_uk_d_28_days <-filter(df_uk_d_28_days, date >= wave2date)
+ggplot(df_uk_d_28_days, aes(x = date, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
-  scale_color_manual(labels = lset_2Nations,values = cset_x2) +  
+  scale_color_manual(labels = lset_2Nations,values = c("steelblue3","purple3")) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 v_image_file_name =  "Deaths_28_days_Eng_Sco"
  ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
@@ -305,10 +286,12 @@ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=N
 ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 # from 1st August
-df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
   select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
-ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
+  df_sc_uk_test <-filter(df_sc_uk_test, date_notified >= wave2date)
+
+ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = cset_x2 ) +  # OK #
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -322,10 +305,12 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # from 1st August
-df_sc_uk_test_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
   select(date_notified, uk_daily_tests_per_100_000, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000, sco_daily_tests_per_100_000_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
-ggplot(df_sc_uk_test_zoom, aes(x = date_notified, y = value)) + 
+ df_sc_uk_test <-filter(df_sc_uk_test, date_notified >= wave2date)
+
+ ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + 
   scale_color_manual(labels = c("Scotland Daily", "Scotland Smoothed", "UK Daily", "UK Smoothed"),values = cset_x4 ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -358,12 +343,14 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 #------------------------------------------------------------------------------
 # Daily Tests Scot/UK/Total with raw
 
-df_sc_test_ma_raw_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
+df_sc_test_ma_raw <- data.frame(j_sco_uk_testing) %>%
   select(date_notified,  nhs_reported_tests_daily, nhs_reported_tests_daily_ma, uk_gov_reported_tests_daily, uk_gov_reported_tests_daily_ma ) %>%
   gather(key = "variable", value = "value",-date_notified)
+  df_sc_test_ma_raw <-filter(df_sc_test_ma_raw, date_notified >= wave2date)
+
 v_title="Processing tests in Scotland"
 v_ylabel = "Number of Tests"
-ggplot(df_sc_test_ma_raw_zoom, aes(x = date_notified, y = value)) + 
+ggplot(df_sc_test_ma_raw, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = c("NHS Scotland Labs Daily",  "NHS Scotland Labs Smoothed", "UK Labs Daily", "UK Labs Smoothed"),values = cset_x4) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -385,9 +372,11 @@ v_title="Positive test rates for Scotland and UK"
 v_xlabel = "Date"
 v_ylabel = "Percentage tests positive"
 
-df_sc_uk_positive <- data.frame(j_sco_uk_testing_zoom) %>%
+df_sc_uk_positive <- data.frame(j_sco_uk_testing) %>%
   select(date_notified, scotland_test_positivity, uk_test_positivity) %>%
   gather(key = "variable", value = "value",-date_notified)
+  df_sc_uk_positive <-filter(df_sc_uk_positive, date_notified >= wave2date)
+
 ggplot(df_sc_uk_positive, aes(x = date_notified, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values =  cset_x2 ) +  
@@ -408,9 +397,11 @@ v_title="New Covid 19 cases by Health Board (per 100,000 population)"
 v_xlabel = "Date"
 v_ylabel = "New Cases per 100,000 population"
 
-df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb100_zoom) %>%
+df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb100) %>%
   select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
   gather(key = "variable", value = "value",-date_notified)
+  df_sc_d_cases_by_hb <-filter(df_sc_d_cases_by_hb, date_notified >= wave2date)
+
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
   scale_color_manual(labels = lset_HB, values = cbbPalette) +
@@ -446,9 +437,11 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 v_title="New Covid 19 cases by Health Board"
 v_ylabel = "New Cases (7 day average)"
 
-df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb_zoom) %>%
+df_sc_d_cases_by_hb <- data.frame(j_sc_d_cases_by_hb) %>%
   select(date_notified, nhs_ayrshire_arran:nhs_western_isles) %>%
   gather(key = "variable", value = "value",-date_notified)
+  df_sc_d_cases_by_hb <-filter(df_sc_d_cases_by_hb, date_notified >= wave2date)
+
 p <- ggplot(df_sc_d_cases_by_hb, aes(x = date_notified, y = value)) + 
   geom_line(aes(color = variable),size=0.75 ) + theme_light() + 
   scale_color_manual(labels = lset_HB, values = cbbPalette) +
@@ -487,26 +480,6 @@ df_sc_t5 <- data.frame(j_sco_uk_testing) %>%
   gather(key = "variable", value = "value",-date_notified)
 #head(df_sc_t5)
 
-# Same data but from 1st August
-df_sc_t5_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
-  select(date_notified, daily_new_cases_ma, z_scot_daily_tests_7_day_ma) %>%
-  gather(key = "variable", value = "value",-date_notified)
-#head(df_sc_t5_zoom)
-
-# Same data but from 1st August
-df_sc_t5_pos_zoom <- data.frame(j_sco_uk_testing_zoom) %>%
-  select(date_notified, daily_new_cases_ma, z_scot_daily_tests_7_day_ma) %>%
-  gather(key = "variable", value = "value",-date_notified)
-#head(df_sc_t5_pos_zoom)
-# Then the Sco testing and case numbers
-# Change image file name
-##v_image_file_name = paste(today, "Testing v Case Numbers.jpg", sep = "", collapse=NULL)
-##ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
-##  p_geom + theme_light() +theme(legend.position = "none")+ 
-##    facet_wrap(~ variable, ncol=1, labeller = labels_SCO_UK_Test, scales = "free_y")
-#ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
-
-# Then the Sco testing and case numbers
 # Change image file name
 v_title="Daily New Cases and Tests"
 v_xlabel = "Date"
@@ -526,7 +499,9 @@ ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=N
 ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 
-ggplot(df_sc_t5_pos_zoom, aes(x = date_notified, y = value)) + 
+# Filter for zoomed chart
+df_sc_t5 <-filter(df_sc_t5, date_notified >= wave2date)
+ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
     p_geom + theme_light() +theme(legend.position = "none")+
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
@@ -544,16 +519,18 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 #-----------------Compare Tests and new cases Scotland/England-----------------------------------j_sc_nation_tests
 
 # # England Scotland Cases
-df_sc_nation_cases_zoom <- data.frame(j_sc_nation_cases_zoom) %>%
+df_sc_nation_cases <- data.frame(j_sc_nation_cases) %>%
   select(date, england, scotland) %>%
   gather(key = "variable", value = "value",-date)
+  df_sc_nation_cases <-filter(df_sc_nation_cases, date >= wave2date)
+
 #head(sc_nation_cases_zoom)
 
 # 4 Nations Cases
-df_sc_4nation_cases_zoom <- data.frame(j_sc_nation_cases_zoom) %>%
+df_sc_4nation_cases <- data.frame(j_sc_nation_cases) %>%
   select(date, england, northern_ireland, scotland, wales) %>%
   gather(key = "variable", value = "value",-date)
-#head(sc_nation_cases_zoom)
+  df_sc_4nation_cases <-filter(df_sc_4nation_cases, date >= wave2date)
 
 # England Scotland Tests
 df_j_sc_nation_tests <- data.frame(j_sc_nation_tests) %>%
@@ -573,7 +550,7 @@ v_title="Daily New Cases per 100,000"
 v_xlabel = "Date"
 v_ylabel = "Cases"
 # Testing v positive tests
-ggplot(df_sc_nation_cases_zoom, aes(x = date, y = value)) + 
+ggplot(df_sc_nation_cases, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -584,7 +561,7 @@ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=N
 ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
 ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
-ggplot(df_sc_4nation_cases_zoom, aes(x = date, y = value)) + 
+ggplot(df_sc_4nation_cases, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
     scale_color_manual(labels = lset_4Nations,values = cset_x4n ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
@@ -639,11 +616,11 @@ ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NU
 
 
 #j_nation_vaccinations
-#---------- Daily Positive Data ------------------------------------------------
+#---------- Daily Positive Data ------------------------------------------------daily_nation_vaccinations
 v_title="UK Nation Vaccination Rates (per 100 people)"
 v_xlabel = "Date"
 v_ylabel = "Doses Administered"
-
+# Total Rates
 df_nation_vaccinations <- data.frame(j_nation_vaccinations) %>%
   select(date, england:wales)  %>%
   gather(key = "variable", value = "value",-date)
@@ -659,42 +636,28 @@ ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=N
 ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
 ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
-```
+#Daily Rates
+v_title="UK Nation Daily Vaccination Rates (per 100 people)"
+# Total Rates
+df_nation_vaccinations <- data.frame(j_d_nation_vaccinations) %>%
+  select(date, england:wales)  %>%
+  gather(key = "variable", value = "value",-date)
+ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
+  theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_Nations, values =  cset_x5 ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
 
-
-```{r not used}
-
-#------- Deaths within 28 days of positive test (UK)----------------------------
-## UK 28 days death data
-#
-# Now deaths within 28 days of a positive test
-df_uk_d28_pos <- data.frame(j_uk_d_28_day_testing) %>%
-  select(date, new_deaths28days_by_death_date) %>%
-  gather(key = "area_name", value = "new_deaths28days_by_death_date",-date)
-# head(df_uk_d28_pos)
-# Same data but from 1st August
-df_uk_d28_pos_zoom <- data.frame(j_uk_d_28_day_testing_zoom) %>%
-  select(date, new_deaths28days_by_death_date) %>%
-  gather(key = "area_name", value = "new_deaths28days_by_death_date",-date)
-head(df_uk_d28_pos_zoom)
-
-v_title="Deaths within 28 days of positive death"
-v_ylabel = "Weekly deaths per 100,000 population"
-# Change image file name
-v_image_file_name = paste(today, "Deaths within 28 days.jpg", sep = "", collapse=NULL)
-ggplot(df_uk_d28_pos, aes(x = date, y = new_deaths28days_by_death_date)) + 
-  geom_line(aes(color = area_name),size=0.5 )   + #theme_light() + 
-  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
-#ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
-
-# Change image file name
-# v_image_file_name = paste(today, "Deaths within 28 days zoom.jpg", sep = "", collapse=NULL)
-# ggplot(df_uk_d28_pos_zoom, aes(x = date, y = new_deaths28days_by_death_date)) + 
-#   geom_line(aes(color = area_name),size=0.75 )   + theme_light() + 
-#   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-# ggsave(here(str_path, v_image_file_name), dpi = 180, width = 8, height = 6)
+v_image_file_name =  "UK_Nations_Vaccinations_Daily_"
+ggsave(here(str_path, paste( v_image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = 280, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = 210, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = 140, width = 8, height = 5)
+ggsave(here(str_path, paste( v_image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = 70, width = 8, height = 5)
 
 ```
+
+
+
 
  
   
