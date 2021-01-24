@@ -37,10 +37,10 @@ library("viridis")           # Load
 here()
 # Now set up some strings etc
 #For LIVE data
-#str_path = "figures/website"
+str_path = "figures/website"
 
 #For TEST data
-str_path = "figures"
+#str_path = "figures"
 
 # Create Datestamps
 today <- format(Sys.Date(), format="%Y-%m-%d ") 
