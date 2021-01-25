@@ -32,8 +32,6 @@ library(tidyverse)
 library(readxl)
 library(here)
 library(janitor)
-#source("C:/Users/Michael/githome/utils/utils.txt")
-source(here("../utils/utils.Rmd"))
 #install.packages("viridis")  # Install
 library("viridis")           # Load
 here()
@@ -49,17 +47,16 @@ today <- format(Sys.Date(), format="%Y-%m-%d ")
 filedate <- format(Sys.Date(), format="%Y-%m-%d") 
 pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
 ############################   FUNCTIONS ######################
+# Print the 5 chart sizes
+# Can call with fiveprint(str_path,v_image_file_name) rest is optional
 
-# # Print the 5 chart sizes
-# # Can call with fiveprint(str_path,v_image_file_name) rest is optional
-# 
-# fiveprint <- function(vstr_path, image_file_name, vdpi = 280, vwidth = 8, vheight = 5){
-#  ggsave(here(vstr_path, paste( image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-# }
+fiveprint <- function(vstr_path, image_file_name, vdpi = 280, vwidth = 8, vheight = 5){
+ ggsave(here(vstr_path, paste( image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
+ ggsave(here(str_path, paste( image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
+ ggsave(here(str_path, paste( image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
+ ggsave(here(str_path, paste( image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
+ ggsave(here(str_path, paste( image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
+}
 ```
 
 # Reading in the data  Do once!
@@ -67,7 +64,7 @@ pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
 ############ UPDATED ###############
 # Standardised input - one dataset per spreadsheet/CSV
 
-# All Testing Data
+# # All Testing Data
 sco_uk_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "d_SCO_UK_Testing", skip = 3)
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
 
