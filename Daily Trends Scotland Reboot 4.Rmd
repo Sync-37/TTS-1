@@ -4,62 +4,22 @@ author: "Michael Kent"
 date: "06/12/2020"
 output: html_document
 ---
-<img
- srcset="
-  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)2240.jpg 2240w,
-  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1960.jpg 1960w,
-  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1120.jpg 1120w,
-  https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)560.jpg 560w,
-   "
- src="https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)fb.jpg"
->
-
-<img
- srcset="
-    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)2240.jpg 2240w,
-    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1680.jpg 1680w,
-    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)1120.jpg 1120w,
-    https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)560.jpg 560w,
-   "
-src="https://thetrue.scot/ftp_in/UK-SCO_Positive_Test_Rate_(WHO)fb.jpg"
->
-
-
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
 library(here)
 library(janitor)
-#source("C:/Users/Michael/githome/utils/utils.txt")
-source(here("../utils/utils.Rmd"))
 #install.packages("viridis")  # Install
 library("viridis")           # Load
-here()
+source(here("../utils/utils.Rmd"))
+
 # Now set up some strings etc
-#For LIVE data
-#str_path = "figures/website"
 
-#For TEST data
-str_path = "figures"
+#str_path = "figures/website"  #For LIVE data
+str_path = "figures"          #For TEST data
 
-# Create Datestamps
-today <- format(Sys.Date(), format="%Y-%m-%d ") 
-filedate <- format(Sys.Date(), format="%Y-%m-%d") 
-pubdate <- format(Sys.Date(), format="%d/%m/%Y ")
-############################   FUNCTIONS ######################
-
-# # Print the 5 chart sizes
-# # Can call with fiveprint(str_path,v_image_file_name) rest is optional
-# 
-# fiveprint <- function(vstr_path, image_file_name, vdpi = 280, vwidth = 8, vheight = 5){
-#  ggsave(here(vstr_path, paste( image_file_name, "fb.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "2240.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "1680.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "1120.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-#  ggsave(here(str_path, paste( image_file_name, "560.jpg", sep = "", collapse=NULL)), dpi = vdpi, width = vwidth, height = vheight)
-# }
 ```
 
 # Reading in the data  Do once!
@@ -95,11 +55,11 @@ j_sc_nation_cases = janitor::clean_names(sc_nation_cases)
 sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P175")
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 
-#Vaccinations
+#Vaccinations  ExtraVaccinations
 daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "W4:AB25")
 j_d_nation_vaccinations = janitor::clean_names(daily_nation_vaccinations)
 
-nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "AH4:AM25")
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AH4:AM25")
 j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
 
 ctitle <- c(names(nation_vaccinations))
@@ -163,23 +123,24 @@ labels_28_day_deaths <- as_labeller(c(
         `daily_tests_7_day_ma` = "Daily Tests Reported (7 day MA)"))
 
 # LABELS
-labels_HB_Data <- as_labeller(c(
-        `nhs_ayrshire_arran`="NHS Ayrshire & Arran",
-        `nhs_borders`="NHS Borders",
-        `nhs_dumfries_galloway`="NHS Dumfries & Galloway",
-        `nhs_fife`="NHS Fife",
-        `nhs_forth_valley`="NHS Forth Valley",
-        `nhs_grampian`="NHS Grampian",
-        `nhs_greater_glasgow_clyde`="NHS Greater Glasgow & Clyde",
-        `nhs_highland`="NHS Highland",
-        `nhs_lanarkshire`="NHS Lanarkshire",
-        `nhs_lothian`="NHS Lothian",
-        `nhs_orkney`="NHS Orkney",
-        `nhs_shetland`="NHS Shetland",
-        `nhs_tayside`="NHS Tayside",
-        `nhs_western_isles`="NHS Western Isles",
-        `scotland`="Scotland"
-                  ))
+  labels_HB_Data <- as_labeller(c(
+          `nhs_ayrshire_arran`="NHS Ayrshire & Arran",
+          `nhs_borders`="NHS Borders",
+          `nhs_dumfries_galloway`="NHS Dumfries & Galloway",
+          `nhs_fife`="NHS Fife",
+          `nhs_forth_valley`="NHS Forth Valley",
+          `nhs_grampian`="NHS Grampian",
+          `nhs_greater_glasgow_clyde`="NHS Greater Glasgow & Clyde",
+          `nhs_highland`="NHS Highland",
+          `nhs_lanarkshire`="NHS Lanarkshire",
+          `nhs_lothian`="NHS Lothian",
+          `nhs_orkney`="NHS Orkney",
+          `nhs_shetland`="NHS Shetland",
+          `nhs_tayside`="NHS Tayside",
+          `nhs_western_isles`="NHS Western Isles",
+          `scotland`="Scotland"
+                    ))
+
 
 
 # Declare standard plot settings
@@ -188,7 +149,7 @@ p_geom <-geom_line(aes(color = variable),size=0.65 )
 lset_HB = c("NHS Ayrshire & Arran", "NHS Borders", "NHS Dumfries & Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian", "NHS Greater Glasgow & Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland", "NHS Tayside", "NHS Western Isles" )
 
 
-cset_x2 = c("purple3", "steelblue3")
+cset_x2 = c("purple3", "blue3")
 cset_x4 = c( "plum1", "purple3","steelblue1", "blue4")
 cset_x4n = c( "blue3", "green3", "purple3","grey50")
 cset_x5 = c( "blue3", "green3", "purple3","grey50", "red3")
@@ -213,6 +174,7 @@ df_uk_d_certificate <- data.frame(j_uk_d_certificate) %>%
   gather(key = "variable", value = "value",-date)
   df_uk_d_certificate <-filter(df_uk_d_certificate, date >= wave2date)
 v_title="Weekly Deaths with Covid on Certificate (per 100,000)"
+v_xlabel = "Date ."
 v_ylabel = "Number of Deaths"
 ggplot(df_uk_d_certificate, aes(x = date, y = value)) + 
   p_geom  + theme_light() + theme(legend.position = "top")+ 
@@ -419,7 +381,8 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
 fiveprint(str_path,"Testing_v_New_Cases_zoom_")
 ```
-```{r TESTS <-> CASES}
+```{r}
+# TESTS <-> CASES
 #-----------------Compare Tests and new cases Scotland/England-----------------------------------j_sc_nation_tests
 
 # # England Scotland Cases
@@ -456,12 +419,15 @@ v_ylabel = "Cases"
 # Testing v positive tests
 ggplot(df_sc_nation_cases, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
+    scale_y_continuous(breaks = scales::breaks_width(20)) +
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 fiveprint(str_path,"Daily_New_Cases_Eng_Sco_")
 
 ggplot(df_sc_4nation_cases, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
+  scale_y_continuous(breaks = scales::breaks_width(20)) +
+ #   scale_y_continuous(breaks=scale_10) +
     scale_color_manual(labels = lset_4Nations,values = cset_x4n ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 fiveprint(str_path,"Daily_New_Cases_All_")
@@ -474,6 +440,7 @@ v_ylabel = "Tests"
 # Testing v positive tests
 ggplot(df_j_sc_nation_tests, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+
+  scale_y_continuous(breaks = scales::breaks_width(100, offset = 0)) +
     scale_color_manual(labels = c( "England", "Scotland"),values = c( "steelblue3", "purple3") ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 fiveprint(str_path,"Daily_New_Tests_Eng_Sco_")
@@ -481,9 +448,9 @@ fiveprint(str_path,"Daily_New_Tests_Eng_Sco_")
 ################################################################
 ggplot(df_j_sc_4nation_tests, aes(x = date, y = value)) + 
     p_geom + theme_light() + theme(legend.position = "bottom")+   
-#    scale_y_discrete(limits=c("0","100","200", "300", "400" ,"500", "600", "700", "800", "900", "1000")) +
     scale_color_manual(labels = lset_4Nations,values = cset_x4n ) +  # OK #
-      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
+      labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
+  scale_y_continuous(breaks = scales::breaks_width(100, offset = 0)) 
 v_image_file_name =  "Daily_New_Tests_All_"
 fiveprint(str_path,"Daily_New_Tests_All_")
 
