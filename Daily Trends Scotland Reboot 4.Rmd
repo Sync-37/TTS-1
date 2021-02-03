@@ -17,8 +17,8 @@ source(here("../utils/utils.Rmd"))
 
 # Now set up some strings etc
 
-#str_path = "figures/website"  #For LIVE data
-str_path = "figures"          #For TEST data
+str_path = "figures/website"  #For LIVE data
+#str_path = "figures"          #For TEST data
 
 ```
 
@@ -32,42 +32,45 @@ sco_uk_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "d_SCO_U
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
 
 # Deaths by certificate
-uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V60")
+uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V80")
 j_uk_d_certificate = janitor::clean_names(uk_d_certificate)
 
 # Deaths within 28 days
-uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V320")
+uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V360")
 j_uk_d_28_days = janitor::clean_names(uk_d_28_days)
 
 # Cases by Health Board MA
-sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX333")
+sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX370")
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
 
 # Cases by Health Board per 100,000
-sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO333")
+sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO370")
 j_sc_d_cases_by_hb100 = janitor::clean_names(sc_d_cases_by_hb100)
 
 #4 Nation Cases
-sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V400")
+sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V440")
 j_sc_nation_cases = janitor::clean_names(sc_nation_cases)
 
 #4 Nation Tests
-sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P175")
+sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P205")
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 
 #Vaccinations  ExtraVaccinations
-daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Vaccinations", range = "W4:AB25")
+daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "W4:AB40")
 j_d_nation_vaccinations = janitor::clean_names(daily_nation_vaccinations)
 
-nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AH4:AM25")
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AH4:AM40")
 j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
 
-ctitle <- c(names(nation_vaccinations))
-cfield <- c(names(j_nation_vaccinations))
-ctitle
-cfield
-ldf <- data.frame(stringsAsFactors=FALSE, c_field = cfield, c_title =ctitle)
-head(ldf)
+smoothed_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AN4:AS40")
+j_d_s_nation_vaccinations = janitor::clean_names(smoothed_nation_vaccinations)
+# 
+# ctitle <- c(names(nation_vaccinations))
+# cfield <- c(names(j_nation_vaccinations))
+# ctitle
+# cfield
+# ldf <- data.frame(stringsAsFactors=FALSE, c_field = cfield, c_title =ctitle)
+# head(ldf)
 ```
 
 # Various Setup - labels, date etc
@@ -81,7 +84,7 @@ v_caption = paste( "Chart © Thetrue.scot \n","Data Source:- Scottish and UK gov
 
 # Start date for zoomed charts
 wave2date = "2020-08-01"
-
+vacdate = "2021-01-10"
 # LABELS
 labels_SCO_UK_Test <- as_labeller(c(
         `date_notified`  = "Date notified",
@@ -377,6 +380,7 @@ fiveprint(str_path,"Testing_v_New_Cases_")
 df_sc_t5 <-filter(df_sc_t5, date_notified >= wave2date)
 ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
     p_geom + theme_light() +theme(legend.position = "none")+
+#  scale_x_continuous(breaks = scales::breaks_width(1, offset = 0)) +  
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
   facet_wrap(~ variable , labeller = labels_SCO_UK_Test, ncol=1, scales = "free_y")
 fiveprint(str_path,"Testing_v_New_Cases_zoom_")
@@ -461,7 +465,7 @@ fiveprint(str_path,"Daily_New_Tests_All_")
 
 #j_nation_vaccinations
 #---------- Daily Positive Data ------------------------------------------------daily_nation_vaccinations
-v_title="UK Nation Vaccination Rates (per 100 people)"
+v_title="Vaccination Rates (per 100 people)"
 v_xlabel = "Date"
 v_ylabel = "Doses Administered"
 # Total Rates
@@ -471,21 +475,39 @@ df_nation_vaccinations <- data.frame(j_nation_vaccinations) %>%
 ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
   theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = lset_4Nations, values =  cset_x5 ) +  
+    scale_y_continuous(breaks = scales::breaks_width(2, offset = 0)) +
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
   ####facet_wrap(~ variable, scales = "free_y", as.table = TRUE, labeller(ldf))
 fiveprint(str_path,"UK_Nations_Vaccinations_")
 
 #Daily Rates
-v_title="UK Nation Daily Vaccination Rates (per 100 people)"
+v_title="Daily Vaccination Rates (per 100 people)"
 # Total Rates
 df_nation_vaccinations <- data.frame(j_d_nation_vaccinations) %>%
   select(date, england:wales)  %>%
   gather(key = "variable", value = "value",-date)
+  df_nation_vaccinations <-filter(df_nation_vaccinations, date >= vacdate)
 ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
   theme_light() + theme(legend.position = "top")+ 
-  scale_color_manual(labels = lset_4Nations, values =  cset_x5 ) +  
+  scale_color_manual(labels = lset_4Nations, values =  cset_x4n ) +  
+  scale_y_continuous(breaks = scales::breaks_width(0.1, offset = 0)) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
 fiveprint(str_path,"UK_Nations_Vaccinations_Daily_")
+#nation_vaccinations
+
+# Smoothed daily  j_d_s_nation_vaccinations
+v_title="Average Daily Vaccination Rates (per 100 people)"
+# Total Rates
+df_nation_vaccinations <- data.frame(j_d_s_nation_vaccinations) %>%
+  select(date, england:wales)  %>%
+  gather(key = "variable", value = "value",-date)
+  df_nation_vaccinations <-filter(df_nation_vaccinations, date >= vacdate)
+ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
+  theme_light() + theme(legend.position = "top")+ 
+  scale_color_manual(labels = lset_4Nations, values =  cset_x4n ) +  
+  scale_y_continuous(breaks = scales::breaks_width(0.1, offset = 0)) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
+#fiveprint(str_path,"Smoothed_Vaccinations_Daily_")
 
 ```
 
