@@ -465,7 +465,7 @@ fiveprint(str_path,"Daily_New_Tests_All_")
 
 #j_nation_vaccinations
 #---------- Daily Positive Data ------------------------------------------------daily_nation_vaccinations
-v_title="Vaccination Rates (per 100 people)"
+v_title="Total Vaccination Rates (per 100 people)"
 v_xlabel = "Date"
 v_ylabel = "Doses Administered"
 # Total Rates
@@ -507,7 +507,7 @@ ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color =
   scale_color_manual(labels = lset_4Nations, values =  cset_x4n ) +  
   scale_y_continuous(breaks = scales::breaks_width(0.1, offset = 0)) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
-#fiveprint(str_path,"Smoothed_Vaccinations_Daily_")
+fiveprint(str_path,"Smoothed_Vaccinations_Daily_")
 
 ```
 
