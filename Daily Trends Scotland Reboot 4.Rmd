@@ -30,6 +30,7 @@ str_path = "figures/website"  #For LIVE data
 # All Testing Data
 sco_uk_testing <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "d_SCO_UK_Testing", skip = 3)
 j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
+#names(j_sco_uk_testing)
 
 # Deaths by certificate
 uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V80")
@@ -64,6 +65,13 @@ j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
 
 smoothed_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AN4:AS40")
 j_d_s_nation_vaccinations = janitor::clean_names(smoothed_nation_vaccinations)
+
+
+# NEW Daily Deaths
+#sco_deaths <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Scotland Daily Deaths", skip = 2)
+#j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
+
+
 # 
 # ctitle <- c(names(nation_vaccinations))
 # cfield <- c(names(j_nation_vaccinations))
@@ -237,7 +245,7 @@ df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
   select(date_notified, uk_daily_tests_per_100_000_ma, sco_daily_tests_per_100_000_ma) %>%
   gather(key = "variable", value = "value",-date_notified)
 ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
-  p_geom  + theme_light() + 
+  p_geom  + theme_light() +  theme(legend.position = "top")+ 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = cset_x2 ) +
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 fiveprint(str_path,"Compare_Testing_MA_Scot-UK_all_")
@@ -249,7 +257,7 @@ df_sc_uk_test <- data.frame(j_sco_uk_testing) %>%
   df_sc_uk_test <-filter(df_sc_uk_test, date_notified >= wave2date)
 
 ggplot(df_sc_uk_test, aes(x = date_notified, y = value)) + 
-  p_geom  + theme_light() + 
+  p_geom  + theme_light() +  theme(legend.position = "top")+ 
   scale_color_manual(labels = c("Scotland", "Whole UK"),values = cset_x2 ) +  # OK #
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
 fiveprint(str_path,"Compare_Testing_MA_Scot-UK_zoom_")
@@ -299,6 +307,22 @@ ggplot(df_sc_uk_positive, aes(x = date_notified, y = value)) +
   scale_color_manual(labels = c("Scotland", "Whole UK"),values =  cset_x2 ) +  
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
 fiveprint(str_path,"UK-SCO_Positive_Test_Rate_(WHO)_")
+
+# New Cases
+v_title="New Case rates for Scotland and UK"
+v_xlabel = "Date"
+v_ylabel = "New Cases per 100,000"
+df_sc_t5 <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, new_uk_cases_ma_per_100_000, new_sco_cases_ma_per_100_000) %>%
+  gather(key = "variable", value = "value",-date_notified)
+  df_sc_t5 <-filter(df_sc_t5, date_notified >= wave2date)
+
+ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_y_continuous(breaks = scales::breaks_width(20, offset = 0)) +
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values =  cset_x2 ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
+fiveprint(str_path,"UK-SCO_New_Case_Rates_")
   
 ```
 Then...
