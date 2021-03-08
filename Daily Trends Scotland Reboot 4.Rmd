@@ -57,13 +57,13 @@ sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nati
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 
 #Vaccinations  ExtraVaccinations
-daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "W4:AB40")
+daily_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "W4:AB140")
 j_d_nation_vaccinations = janitor::clean_names(daily_nation_vaccinations)
 
-nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AH4:AM40")
+nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AH4:AM140")
 j_nation_vaccinations = janitor::clean_names(nation_vaccinations)
 
-smoothed_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AN4:AS40")
+smoothed_nation_vaccinations <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "ExtraVaccinations", range = "AN4:AS140")
 j_d_s_nation_vaccinations = janitor::clean_names(smoothed_nation_vaccinations)
 
 
