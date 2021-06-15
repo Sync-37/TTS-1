@@ -4,8 +4,38 @@ author: "Michael Kent"
 date: "06/12/2020"
 output: html_document
 ---
+England			1 in 340 people.
+Wales			1 in 430 people.
+Scotland		1 in 275 people.
+Northern Ireland	1 in 315 people.
+
+# TEST Data - England
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation;areaName=England&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newTestsByPublishDate%22:%22newTestsByPublishDate%22,%22cumTestsByPublishDate%22:%22cumTestsByPublishDate%22%7D&format=csv
+# TEST Data - Scotland
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation;areaName=Scotland&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newTestsByPublishDate%22:%22newTestsByPublishDate%22,%22cumTestsByPublishDate%22:%22cumTestsByPublishDate%22%7D&format=csv
+# TEST Data - Northern Ireland
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation;areaName=Northern%2520Ireland&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newTestsByPublishDate%22:%22newTestsByPublishDate%22,%22cumTestsByPublishDate%22:%22cumTestsByPublishDate%22%7D&format=csv
+# TEST Data - Wales
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation;areaName=Wales&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newTestsByPublishDate%22:%22newTestsByPublishDate%22,%22cumTestsByPublishDate%22:%22cumTestsByPublishDate%22%7D&format=csv
+
+
+
+# code for number of cases by date reported - 4 nations.
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesByPublishDate%22:%22newCasesByPublishDate%22,%22cumCasesByPublishDate%22:%22cumCasesByPublishDate%22%7D&format=csv
+
+
+# Code for vaccinations first dose - 4 nations.
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newPeopleVaccinatedFirstDoseByPublishDate%22:%22newPeopleVaccinatedFirstDoseByPublishDate%22,%22cumPeopleVaccinatedFirstDoseByPublishDate%22:%22cumPeopleVaccinatedFirstDoseByPublishDate%22%7D&format=csv
+
+# Code for vaccinations second dose - 4 nations.
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newPeopleVaccinatedSecondDoseByPublishDate%22:%22newPeopleVaccinatedSecondDoseByPublishDate%22,%22cumPeopleVaccinatedSecondDoseByPublishDate%22:%22cumPeopleVaccinatedSecondDoseByPublishDate%22%7D&format=csv
+
+# Code for deaths within 28 days by test date - 4 nations
+https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=nation&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newDeaths28DaysByPublishDate%22:%22newDeaths28DaysByPublishDate%22,%22cumDeaths28DaysByPublishDate%22:%22cumDeaths28DaysByPublishDate%22%7D&format=csv
+
 
 ```{r setup, include=FALSE}
+rm(list = ls())
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
@@ -33,27 +63,28 @@ j_sco_uk_testing = janitor::clean_names(sco_uk_testing)
 #names(j_sco_uk_testing)
 
 # Deaths by certificate
-uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V80")
+uk_d_certificate <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Cert Nation Deaths",  range = "L2:V100")
 j_uk_d_certificate = janitor::clean_names(uk_d_certificate)
 
 # Deaths within 28 days
-uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V360")
+uk_d_28_days <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Deaths 28",  range = "L2:V460")
 j_uk_d_28_days = janitor::clean_names(uk_d_28_days)
 
 # Cases by Health Board MA
-sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX370")
+sc_d_cases_by_hb <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AI3:AX470")
 j_sc_d_cases_by_hb = janitor::clean_names(sc_d_cases_by_hb)
+head(j_sc_d_cases_by_hb)
 
 # Cases by Health Board per 100,000
-sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO370")
+sc_d_cases_by_hb100 <- read_excel("data/S_SCO-UK-Testing-data.xlsx",  sheet = "d_cases_by_hb", range = "AZ3:BO470")
 j_sc_d_cases_by_hb100 = janitor::clean_names(sc_d_cases_by_hb100)
 
 #4 Nation Cases
-sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V440")
+sc_nation_cases<- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "Nation Cases", range = "R3:V540")
 j_sc_nation_cases = janitor::clean_names(sc_nation_cases)
 
 #4 Nation Tests
-sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P205")
+sc_nation_tests <- read_excel("data/S_SCO-UK-Testing-data.xlsx", sheet = "4 nation tests", range = "K2:P320")
 j_sc_nation_tests = janitor::clean_names(sc_nation_tests)
 
 #Vaccinations  ExtraVaccinations
@@ -91,7 +122,9 @@ v_caption = paste( "Chart © Thetrue.scot \n","Data Source:- Scottish and UK gov
 #v_caption = paste( "Data Source: Scottish and UK government statistics as published ", pubdate,  sep = "", collapse=NULL)
 
 # Start date for zoomed charts
-wave2date = "2020-08-01"
+#wave2date = "2020-08-01"
+wave2date = "2021-01-01"
+wave3date = "2021-02-01"
 vacdate = "2021-01-10"
 # LABELS
 labels_SCO_UK_Test <- as_labeller(c(
@@ -324,6 +357,23 @@ ggplot(df_sc_t5, aes(x = date_notified, y = value)) +
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
 fiveprint(str_path,"UK-SCO_New_Case_Rates_")
   
+
+# New Cases  ZOOM
+v_title="New Case rates for Scotland and UK"
+v_xlabel = "Date"
+v_ylabel = "New Cases per 100,000"
+df_sc_t5 <- data.frame(j_sco_uk_testing) %>%
+  select(date_notified, new_uk_cases_ma_per_100_000, new_sco_cases_ma_per_100_000) %>%
+  gather(key = "variable", value = "value",-date_notified)
+  df_sc_t5 <-filter(df_sc_t5, date_notified >= wave3date)
+
+ggplot(df_sc_t5, aes(x = date_notified, y = value)) + 
+  p_geom  + theme_light() + theme(legend.position = "top")+ 
+  scale_y_continuous(breaks = scales::breaks_width(5, offset = 0)) +
+  scale_color_manual(labels = c("Scotland", "Whole UK"),values =  cset_x2 ) +  
+  labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "")
+fiveprint(str_path,"UK-SCO_New_Case_Rates_zoom_")
+  
 ```
 Then...
 ```{r}
@@ -425,7 +475,7 @@ df_sc_nation_cases <- data.frame(j_sc_nation_cases) %>%
 df_sc_4nation_cases <- data.frame(j_sc_nation_cases) %>%
   select(date, england, northern_ireland, scotland, wales) %>%
   gather(key = "variable", value = "value",-date)
-  df_sc_4nation_cases <-filter(df_sc_4nation_cases, date >= wave2date)
+  df_sc_4nation_cases <-filter(df_sc_4nation_cases, date >= wave3date)
 
 # England Scotland Tests
 df_j_sc_nation_tests <- data.frame(j_sc_nation_tests) %>%
@@ -478,7 +528,7 @@ ggplot(df_j_sc_4nation_tests, aes(x = date, y = value)) +
     p_geom + theme_light() + theme(legend.position = "bottom")+   
     scale_color_manual(labels = lset_4Nations,values = cset_x4n ) +  # OK #
       labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") +
-  scale_y_continuous(breaks = scales::breaks_width(100, offset = 0)) 
+  scale_y_continuous(breaks = scales::breaks_width(200, offset = 0)) 
 v_image_file_name =  "Daily_New_Tests_All_"
 fiveprint(str_path,"Daily_New_Tests_All_")
 
@@ -499,7 +549,7 @@ df_nation_vaccinations <- data.frame(j_nation_vaccinations) %>%
 ggplot(df_nation_vaccinations, aes(x = date, y = value)) + geom_line(aes(color = variable),size=0.8 )+ #  p_geom  +
   theme_light() + theme(legend.position = "top")+ 
   scale_color_manual(labels = lset_4Nations, values =  cset_x5 ) +  
-    scale_y_continuous(breaks = scales::breaks_width(2, offset = 0)) +
+    scale_y_continuous(breaks = scales::breaks_width(5, offset = 0)) +
   labs(x = v_xlabel, y = v_ylabel, title = v_title, caption = v_caption, color = "") 
   ####facet_wrap(~ variable, scales = "free_y", as.table = TRUE, labeller(ldf))
 fiveprint(str_path,"UK_Nations_Vaccinations_")
